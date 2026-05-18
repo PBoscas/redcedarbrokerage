@@ -1,0 +1,12 @@
+{
+  "crons": [
+    {
+      "path": "/api/mls/sync?type=active",
+      "schedule": "0 * * * *"
+    },
+    {
+      "path": "/api/mls/sync?type=closed",
+      "schedule": "0 6 * * *"
+    }
+  ]
+}

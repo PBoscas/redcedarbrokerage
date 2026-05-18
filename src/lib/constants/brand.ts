@@ -1,0 +1,56 @@
+// ============================================================
+// Red Cedar Brand Constants
+// ============================================================
+
+export const BRAND = {
+  name: 'Red Cedar Real Estate',
+  tagline: 'Giving local home buyers and sellers an unfair advantage over the competition!',
+  description:
+    'Red Cedar Real Estate is the highest rated real estate brokerage in central Maryland, delivering a first-class client experience from start to finish.',
+  office: {
+    address: '6325 Woodside Court, Suite 105',
+    city: 'Columbia',
+    state: 'MD',
+    zip: '21046',
+    phone: '(443) 708-2887',
+    mobile: '(410) 952-5726',
+    fax: '(443) 455-1563',
+    email: 'peter@redcedarre.com',
+  },
+  serviceRegion: 'Maryland & Washington DC',
+  founded: '2012',
+} as const;
+
+export const STATS = [
+  { value: '$500M+', label: 'Total Sales Volume' },
+  { value: '1,000+', label: 'Homes Represented' },
+  { value: '15+', label: 'Maryland Markets Served' },
+  { value: '98%', label: 'Client Satisfaction' },
+] as const;
+
+export const PILLARS = [
+  {
+    title: 'Technology-Driven Brokerage',
+    description:
+      'Modern tools and streamlined systems that give our agents and clients a decisive advantage at every stage of the transaction.',
+    icon: 'monitor',
+  },
+  {
+    title: 'Exceptional Service',
+    description:
+      'A first-class client experience defined by responsiveness, expertise, and a relentless commitment to every client\'s goals.',
+    icon: 'shield',
+  },
+  {
+    title: 'Superior Listing Marketing',
+    description:
+      'Cinematic photography, editorial storytelling, and targeted exposure strategies that position every home to command its highest value.',
+    icon: 'image',
+  },
+  {
+    title: 'Personalized Client Experience',
+    description:
+      'No two clients are the same. Our agents craft bespoke strategies tailored to your timeline, preferences, and ambitions.',
+    icon: 'heart',
+  },
+] as const;

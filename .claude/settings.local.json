@@ -3,7 +3,33 @@
     "allow": [
       "Bash(mv:*)",
       "Bash(npm install:*)",
-      "Bash(npx shadcn@latest:*)"
+      "Bash(npx shadcn@latest:*)",
+      "Bash(mkdir:*)",
+      "Bash(npx next:*)",
+      "Bash(taskkill //F //IM node.exe)",
+      "Bash(npm run:*)",
+      "Bash(netstat -ano)",
+      "Bash(NODE_DEBUG=fs npx next dev)",
+      "Bash(node:*)",
+      "Bash(powershell \"Get-Item 'src\\\\app\\\\layout.tsx' | Select-Object Name, Length, Attributes; \\(Get-Item 'src\\\\app\\\\layout.tsx'\\).Attributes\")",
+      "Bash(powershell \"Get-Item 'src\\\\components\\\\ui\\\\button.tsx' | Select-Object Name, Length, Attributes\")",
+      "Bash(powershell \"[System.Enum]::Parse\\([System.IO.FileAttributes], '4199968'\\)\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3005)",
+      "Bash(pip install:*)",
+      "Bash(python:*)",
+      "mcp__Neon__list_projects",
+      "mcp__Neon__create_project",
+      "mcp__Neon__run_sql",
+      "WebFetch(domain:redcedarhomesales.com)",
+      "mcp__Neon__run_sql_transaction",
+      "mcp__Neon__get_connection_string",
+      "Bash(curl -s http://localhost:3456/agents)",
+      "Bash(curl -s http://localhost:3456/agents/peter-boscas)",
+      "Bash(npx kill-port:*)",
+      "Bash(curl -s http://localhost:3005/neighborhoods)",
+      "mcp__Neon__provision_neon_auth",
+      "mcp__Neon__get_neon_auth_config",
+      "mcp__Neon__configure_neon_auth"
     ]
   }
 }
