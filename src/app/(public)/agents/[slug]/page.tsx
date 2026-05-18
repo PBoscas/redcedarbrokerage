@@ -8,6 +8,8 @@ import {
   getAgentAwards,
 } from '@/lib/queries/agents';
 
+export const revalidate = 60;
+
 interface AgentDetailPageProps {
   params: Promise<{ slug: string }>;
 }

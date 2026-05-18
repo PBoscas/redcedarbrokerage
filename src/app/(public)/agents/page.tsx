@@ -2,6 +2,8 @@ import type { Metadata } from 'next';
 import { AgentsArchive } from '@/components/sections/agents-archive';
 import { getPublicAgents, getAgentSpecialties } from '@/lib/queries/agents';
 
+export const revalidate = 60;
+
 export const metadata: Metadata = {
   title: 'Our Agents',
   description:
