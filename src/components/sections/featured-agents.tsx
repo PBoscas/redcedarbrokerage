@@ -45,7 +45,7 @@ export function FeaturedAgentsSection({ agents }: FeaturedAgentsSectionProps) {
                 className="group block"
               >
                 {/* Portrait */}
-                <div className="relative aspect-[3/4] bg-sand rounded overflow-hidden mb-6">
+                <div className="relative aspect-[4/5] max-h-80 bg-sand rounded overflow-hidden mb-6">
                   {agent.headshot_url ? (
                     <Image
                       src={agent.headshot_url}
