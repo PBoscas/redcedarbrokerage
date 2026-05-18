@@ -64,9 +64,19 @@ export default function ProfileForm({ agent, specialties, serviceAreas, awards }
                 <input type="text" className="w-full px-4 py-3 bg-white border border-border rounded text-sm focus:outline-none focus:border-cedar focus:ring-1 focus:ring-cedar/20" defaultValue={agent.last_name} />
               </div>
             </div>
-            <div>
-              <label className="block text-sm font-medium text-charcoal mb-1.5">Title</label>
-              <input type="text" className="w-full px-4 py-3 bg-white border border-border rounded text-sm focus:outline-none focus:border-cedar focus:ring-1 focus:ring-cedar/20" defaultValue={agent.title} />
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-charcoal mb-1.5">Title</label>
+                <input type="text" className="w-full px-4 py-3 bg-white border border-border rounded text-sm focus:outline-none focus:border-cedar focus:ring-1 focus:ring-cedar/20" defaultValue={agent.title} />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-charcoal mb-1.5">Display Role</label>
+                <select className="w-full px-4 py-3 bg-white border border-border rounded text-sm focus:outline-none focus:border-cedar focus:ring-1 focus:ring-cedar/20" defaultValue={agent.role}>
+                  <option value="broker">Broker</option>
+                  <option value="agent">Agent</option>
+                  <option value="staff">Support Staff</option>
+                </select>
+              </div>
             </div>
             <div>
               <label className="block text-sm font-medium text-charcoal mb-1.5">
