@@ -228,16 +228,16 @@ export async function syncActiveListings(): Promise<SyncResult> {
   let syncType: 'full' | 'delta';
 
   if (state.last_modification_timestamp) {
-    // Delta sync
+    // Delta sync — fetch everything modified since last run
     listings = await fetchDeltaListings(state.last_modification_timestamp);
     syncType = 'delta';
   } else {
-    // Full sync
+    // Full sync — first run
     listings = await fetchActiveListings();
     syncType = 'full';
   }
 
-  // Upsert all listings
+  // Upsert all listings (catches status transitions: active→pending, pending→closed, etc.)
   for (const l of listings) {
     await upsertListing(l);
   }
@@ -254,12 +254,12 @@ export async function syncActiveListings(): Promise<SyncResult> {
   const upsertedKeys = listings.map((l) => l.ListingKey);
   const photosCount = await syncPhotosForListings(upsertedKeys);
 
-  // Handle delistings on full sync
-  let delistingsChecked = 0;
-  if (syncType === 'full') {
-    const activeKeys = new Set(listings.map((l) => l.ListingKey));
-    delistingsChecked = await handleDelistings(activeKeys);
-  }
+  // Always check for delistings — fetch current active listings from MLS
+  // and compare against what we think is active in the DB.
+  // This catches listings removed from MLS entirely (not just status changes).
+  const currentActive = await fetchActiveListings();
+  const activeKeys = new Set(currentActive.map((l) => l.ListingKey));
+  const delistingsChecked = await handleDelistings(activeKeys);
 
   // Update sync state
   if (maxTimestamp) {
