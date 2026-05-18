@@ -9,13 +9,13 @@ interface TestimonialRow {
   id: string;
   client_name: string;
   quote: string;
-  context: string | null;
+  client_title: string | null;
   featured: boolean;
 }
 
 async function getAgentTestimonials(agentId: string): Promise<TestimonialRow[]> {
   const rows = await sql`
-    SELECT id, client_name, quote, context, featured
+    SELECT id, client_name, quote, client_title, featured
     FROM agent_testimonials
     WHERE agent_id = ${agentId}
     ORDER BY featured DESC, created_at DESC
@@ -70,7 +70,7 @@ export default async function TestimonialsPage() {
                     &ldquo;{t.quote}&rdquo;
                   </p>
                   <p className="text-sm font-medium text-charcoal">{t.client_name}</p>
-                  {t.context && <p className="text-xs text-muted-foreground">{t.context}</p>}
+                  {t.client_title && <p className="text-xs text-muted-foreground">{t.client_title}</p>}
                 </div>
                 <div className="flex items-center gap-2">
                   <button className="p-2 text-muted-foreground hover:text-cedar transition-colors" aria-label="Edit">

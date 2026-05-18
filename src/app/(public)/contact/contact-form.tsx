@@ -46,13 +46,48 @@ export function ContactForm({ agents, preselectedAgentSlug }: ContactFormProps) 
     preselectedAgentSlug ?? ''
   );
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const selectedAgent = agents.find((a) => a.slug === selectedAgentSlug) ?? null;
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // TODO: Submit to Supabase
-    setSubmitted(true);
+    setSubmitting(true);
+    setError(null);
+
+    const form = e.currentTarget;
+    const formData = new FormData(form);
+
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          type: selectedType,
+          name: formData.get('name'),
+          email: formData.get('email'),
+          phone: formData.get('phone') || null,
+          message: formData.get('message') || null,
+          agent_slug: selectedAgentSlug || null,
+          metadata: {
+            areas: formData.get('areas') || undefined,
+            address: formData.get('address') || undefined,
+          },
+        }),
+      });
+
+      if (!res.ok) {
+        const data = await res.json().catch(() => null);
+        throw new Error(data?.error || 'Something went wrong. Please try again.');
+      }
+
+      setSubmitted(true);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Something went wrong. Please try again.');
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   if (submitted) {
@@ -169,6 +204,7 @@ export function ContactForm({ agents, preselectedAgentSlug }: ContactFormProps) 
                           </label>
                           <input
                             id="name"
+                            name="name"
                             type="text"
                             required
                             className="w-full px-4 py-3 bg-white border border-border rounded text-sm focus:outline-none focus:border-cedar focus:ring-1 focus:ring-cedar/20 transition-colors"
@@ -181,6 +217,7 @@ export function ContactForm({ agents, preselectedAgentSlug }: ContactFormProps) 
                           </label>
                           <input
                             id="email"
+                            name="email"
                             type="email"
                             required
                             className="w-full px-4 py-3 bg-white border border-border rounded text-sm focus:outline-none focus:border-cedar focus:ring-1 focus:ring-cedar/20 transition-colors"
@@ -194,6 +231,7 @@ export function ContactForm({ agents, preselectedAgentSlug }: ContactFormProps) 
                         </label>
                         <input
                           id="phone"
+                          name="phone"
                           type="tel"
                           className="w-full px-4 py-3 bg-white border border-border rounded text-sm focus:outline-none focus:border-cedar focus:ring-1 focus:ring-cedar/20 transition-colors"
                           placeholder="(443) 555-0100"
@@ -225,6 +263,7 @@ export function ContactForm({ agents, preselectedAgentSlug }: ContactFormProps) 
                           </label>
                           <input
                             id="areas"
+                            name="areas"
                             type="text"
                             className="w-full px-4 py-3 bg-white border border-border rounded text-sm focus:outline-none focus:border-cedar focus:ring-1 focus:ring-cedar/20 transition-colors"
                             placeholder="e.g. Columbia, Ellicott City, Clarksville"
@@ -239,6 +278,7 @@ export function ContactForm({ agents, preselectedAgentSlug }: ContactFormProps) 
                           </label>
                           <input
                             id="address"
+                            name="address"
                             type="text"
                             className="w-full px-4 py-3 bg-white border border-border rounded text-sm focus:outline-none focus:border-cedar focus:ring-1 focus:ring-cedar/20 transition-colors"
                             placeholder="Your property address"
@@ -252,18 +292,31 @@ export function ContactForm({ agents, preselectedAgentSlug }: ContactFormProps) 
                         </label>
                         <textarea
                           id="message"
+                          name="message"
                           rows={4}
                           className="w-full px-4 py-3 bg-white border border-border rounded text-sm focus:outline-none focus:border-cedar focus:ring-1 focus:ring-cedar/20 transition-colors resize-none"
                           placeholder="Tell us more about what you're looking for..."
                         />
                       </div>
 
+                      {error && (
+                        <div className="p-3 bg-red-50 border border-red-200 rounded text-sm text-red-700">
+                          {error}
+                        </div>
+                      )}
+
                       <button
                         type="submit"
-                        className="inline-flex items-center gap-2 px-8 py-4 bg-cedar text-white font-medium text-sm rounded hover:bg-cedar-dark transition-colors"
+                        disabled={submitting}
+                        className="inline-flex items-center gap-2 px-8 py-4 bg-cedar text-white font-medium text-sm rounded hover:bg-cedar-dark transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
                       >
-                        {selectedAgent ? `Send to ${selectedAgent.name}` : 'Send Inquiry'}
-                        <ArrowRight className="h-4 w-4" />
+                        {submitting
+                          ? 'Sending...'
+                          : selectedAgent
+                            ? `Send to ${selectedAgent.name}`
+                            : 'Send Inquiry'
+                        }
+                        {!submitting && <ArrowRight className="h-4 w-4" />}
                       </button>
                     </form>
                   </motion.div>
