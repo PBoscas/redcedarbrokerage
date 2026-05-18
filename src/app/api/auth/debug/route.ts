@@ -1,27 +1,26 @@
 import { NextResponse } from 'next/server';
-import pg from 'pg';
+import { auth } from '@/lib/auth/server';
 
-export async function GET() {
-  const url = process.env.DATABASE_URL!.replace('-pooler.', '.');
-  const pool = new pg.Pool({
-    connectionString: url,
-    options: '-c search_path=neon_auth,public',
-    ssl: { rejectUnauthorized: false },
-  });
-
+export async function GET(request: Request) {
   try {
-    const result = await pool.query('SELECT id, email FROM "user" LIMIT 1');
-    await pool.end();
+    // Test the auth handler directly with a fake sign-in request
+    const testUrl = new URL('/api/auth/sign-in/email', request.url);
+    const testReq = new Request(testUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: 'debug@test.com', password: 'test' }),
+    });
+
+    const response = await auth.handler(testReq);
+    const body = await response.text();
+
     return NextResponse.json({
-      ok: true,
-      url_has_pooler: process.env.DATABASE_URL!.includes('-pooler'),
-      unpooled_host: new URL(url).hostname,
-      row: result.rows[0],
+      status: response.status,
+      body: body || '(empty)',
+      headers: Object.fromEntries(response.headers.entries()),
     });
   } catch (e) {
-    await pool.end().catch(() => {});
     return NextResponse.json({
-      ok: false,
       error: e instanceof Error ? e.message : String(e),
       stack: e instanceof Error ? e.stack : undefined,
     }, { status: 500 });
