@@ -5,7 +5,6 @@ import { FeaturedAgentsSection } from '@/components/sections/featured-agents';
 import { DifferenceSection } from '@/components/sections/difference';
 import { TechnologySection } from '@/components/sections/technology';
 import { FeaturedHomesSection } from '@/components/sections/featured-homes';
-import { NeighborhoodsSection } from '@/components/sections/neighborhoods';
 import { TestimonialsSection } from '@/components/sections/testimonials';
 import { AwardsBandSection } from '@/components/sections/awards-band';
 import { RecruitingTeaserSection } from '@/components/sections/recruiting-teaser';
@@ -14,12 +13,10 @@ import { getRandomAgents, getAgentSpecialties } from '@/lib/queries/agents';
 import { getFeaturedListings } from '@/lib/queries/listings';
 
 export const dynamic = 'force-dynamic';
-import { getFeaturedNeighborhoods } from '@/lib/queries/neighborhoods';
 
 export default async function HomePage() {
-  const [rawAgents, neighborhoods, featuredListings] = await Promise.all([
+  const [rawAgents, featuredListings] = await Promise.all([
     getRandomAgents(3),
-    getFeaturedNeighborhoods(6),
     getFeaturedListings(3),
   ]);
 
@@ -60,10 +57,7 @@ export default async function HomePage() {
       {/* 7. Featured homes showcase */}
       <FeaturedHomesSection listings={featuredListings} />
 
-      {/* 8. DMV neighborhood expertise */}
-      <NeighborhoodsSection neighborhoods={neighborhoods} />
-
-      {/* 9. Testimonials */}
+      {/* 8. Testimonials */}
       <TestimonialsSection />
 
       {/* 10. Awards + media mentions */}

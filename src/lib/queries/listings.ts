@@ -9,6 +9,10 @@ export interface ListingRow {
   property_type: string | null;
   property_sub_type: string | null;
   address: string | null;
+  street_number: string | null;
+  street_name: string | null;
+  street_suffix: string | null;
+  unit_number: string | null;
   city: string | null;
   state: string | null;
   zip: string | null;
@@ -99,10 +103,21 @@ export async function getListingPrimaryPhoto(listingKey: string): Promise<string
   const rows = await sql`
     SELECT media_url FROM mls_listing_photos
     WHERE listing_key = ${listingKey}
+      AND media_url LIKE '%.jpg'
     ORDER BY display_order ASC NULLS LAST
     LIMIT 1
   `;
-  return (rows[0]?.media_url as string) ?? null;
+  if (rows[0]?.media_url) return rows[0].media_url as string;
+
+  // Fallback: any image-like URL
+  const fallback = await sql`
+    SELECT media_url FROM mls_listing_photos
+    WHERE listing_key = ${listingKey}
+      AND (media_url LIKE '%.jpg' OR media_url LIKE '%.jpeg' OR media_url LIKE '%.png' OR media_url LIKE '%.webp')
+    ORDER BY display_order ASC NULLS LAST
+    LIMIT 1
+  `;
+  return (fallback[0]?.media_url as string) ?? null;
 }
 
 export async function getFeaturedListings(limit = 3): Promise<(ListingRow & { photo_url: string | null })[]> {

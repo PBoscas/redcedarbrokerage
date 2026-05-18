@@ -43,12 +43,12 @@ export default async function ListingsPage() {
   return (
     <>
       {/* Hero */}
-      <section className="pt-32 pb-16 bg-warm-white">
+      <section className="pt-32 pb-8 bg-warm-white">
         <div className="container-wide">
           <p className="text-xs tracking-[0.3em] uppercase text-cedar mb-4 font-medium">
             MLS Listings
           </p>
-          <h1 className="text-display text-4xl md:text-5xl lg:text-6xl text-charcoal mb-6">
+          <h1 className="text-display text-4xl md:text-5xl lg:text-6xl text-charcoal mb-4">
             Our <span className="text-cedar">Listings</span>
           </h1>
           <p className="text-muted-foreground max-w-xl text-body-lg">

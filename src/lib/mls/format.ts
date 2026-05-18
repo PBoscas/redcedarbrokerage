@@ -19,6 +19,32 @@ export function formatSqft(sqft: number | null): string {
   return num.toLocaleString('en-US');
 }
 
+function titleCase(str: string): string {
+  return str
+    .toLowerCase()
+    .replace(/\b\w/g, (c) => c.toUpperCase());
+}
+
+export function formatStreetAddress(listing: {
+  street_number?: string | null;
+  street_name?: string | null;
+  street_suffix?: string | null;
+  unit_number?: string | null;
+  address?: string | null;
+}): string {
+  const parts = [listing.street_number, listing.street_name, listing.street_suffix].filter(Boolean);
+  if (parts.length > 0) {
+    const street = titleCase(parts.join(' '));
+    return listing.unit_number ? `${street}, Unit ${listing.unit_number}` : street;
+  }
+  return listing.address || 'Address Unavailable';
+}
+
+export function formatCityLine(city: string | null, state: string | null, zip: string | null): string {
+  const c = city ? titleCase(city) : null;
+  return [c, state, zip].filter(Boolean).join(', ');
+}
+
 export function statusColor(status: string): string {
   switch (status) {
     case 'Active':

@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FadeIn } from '@/components/ui/motion';
 import { Home, Bed, Bath, Ruler } from 'lucide-react';
-import { formatPrice, formatBaths, formatSqft, statusColor, statusLabel } from '@/lib/mls/format';
+import { formatPrice, formatBaths, formatSqft, formatStreetAddress, formatCityLine, statusColor, statusLabel } from '@/lib/mls/format';
 import type { ListingRow } from '@/lib/queries/listings';
 
 type Tab = 'active' | 'pending' | 'sold';
@@ -81,10 +81,10 @@ function ListingCard({
 
       {/* Address */}
       <h3 className="text-editorial text-base text-charcoal mb-0.5 group-hover:text-cedar transition-colors">
-        {listing.address}
+        {formatStreetAddress(listing)}
       </h3>
       <p className="text-sm text-muted-foreground mb-3">
-        {[listing.city, listing.state, listing.zip].filter(Boolean).join(', ')}
+        {formatCityLine(listing.city, listing.state, listing.zip)}
       </p>
 
       {/* Stats with icons */}
@@ -131,7 +131,7 @@ export function ListingsView({
   const listings = tab === 'active' ? active : tab === 'pending' ? pending : sold;
 
   return (
-    <section className="section-padding bg-warm-white">
+    <section className="pt-8 pb-16 md:pb-24 bg-warm-white">
       <div className="container-wide">
         {/* Tabs */}
         <FadeIn>

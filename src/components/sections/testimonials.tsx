@@ -35,7 +35,7 @@ export function TestimonialsSection() {
     setCurrent((c) => (c === PLACEHOLDER_TESTIMONIALS.length - 1 ? 0 : c + 1));
 
   return (
-    <section className="section-padding bg-sand-light">
+    <section className="section-padding bg-warm-white">
       <div className="container-narrow">
         <FadeIn className="text-center mb-16">
           <p className="text-xs tracking-[0.3em] uppercase text-cedar mb-4 font-medium">
