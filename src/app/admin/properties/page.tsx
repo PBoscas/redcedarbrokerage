@@ -1,27 +1,39 @@
-'use client';
-
+import { sql } from '@/lib/db';
 import { FadeIn } from '@/components/ui/motion';
 import {
-  Home, Search, Plus, MoreHorizontal,
-  DollarSign, MapPin, Bed, Bath,
+  formatStreetAddress,
+  formatCityLine,
+  formatPrice,
+  formatBaths,
+  formatSqft,
+  statusColor,
+  statusLabel,
+} from '@/lib/mls/format';
+import type { ListingRow } from '@/lib/queries/listings';
+import {
+  Home, MapPin, Bed, Bath, DollarSign, ExternalLink,
 } from 'lucide-react';
+import Link from 'next/link';
 
-const placeholderProperties = [
-  { address: '8742 Tamar Dr', city: 'Columbia', price: '$525,000', beds: 4, baths: 2.5, sqft: '2,400', status: 'Active', agent: 'Joe Bird', days: 12 },
-  { address: '3021 Brightwood Ct', city: 'Ellicott City', price: '$875,000', beds: 5, baths: 3, sqft: '3,800', status: 'Active', agent: 'Brian Pakulla', days: 5 },
-  { address: '6190 Hidden Stream Dr', city: 'Clarksville', price: '$715,000', beds: 4, baths: 3, sqft: '3,200', status: 'Pending', agent: 'Stephanie Ridgely', days: 28 },
-  { address: '1455 River Hill Rd', city: 'Clarksville', price: '$1,250,000', beds: 6, baths: 4, sqft: '4,500', status: 'Active', agent: 'Hollie Pakulla', days: 3 },
-  { address: '9320 Vollmerhausen Rd', city: 'Jessup', price: '$389,000', beds: 3, baths: 2, sqft: '1,650', status: 'Sold', agent: 'Nikki Monios', days: 45 },
-  { address: '5014 Dorsey Hall Dr', city: 'Ellicott City', price: '$475,000', beds: 4, baths: 2.5, sqft: '2,200', status: 'Active', agent: 'Ryan Douglas', days: 8 },
-];
+export const dynamic = 'force-dynamic';
 
-const statusBadge: Record<string, string> = {
-  Active: 'bg-green-50 text-green-700',
-  Pending: 'bg-amber-50 text-amber-700',
-  Sold: 'bg-gray-100 text-gray-600',
-};
+export default async function PropertiesPage() {
+  const rows = await sql`
+    SELECT l.*,
+      (SELECT COUNT(*) FROM mls_listings WHERE status IN ('Active', 'Active Under Contract', 'Coming Soon')) as active_count,
+      (SELECT COUNT(*) FROM mls_listings WHERE status = 'Closed') as sold_count
+    FROM mls_listings l
+    ORDER BY
+      CASE WHEN l.status IN ('Active', 'Coming Soon') THEN 0
+           WHEN l.status IN ('Pending', 'Active Under Contract') THEN 1
+           ELSE 2 END,
+      l.list_price DESC
+    LIMIT 50
+  ` as (ListingRow & { active_count: number; sold_count: number })[];
 
-export default function PropertiesPage() {
+  const activeCount = rows.length > 0 ? Number(rows[0].active_count) : 0;
+  const soldCount = rows.length > 0 ? Number(rows[0].sold_count) : 0;
+
   return (
     <div className="max-w-6xl">
       <FadeIn>
@@ -29,102 +41,82 @@ export default function PropertiesPage() {
           <div>
             <h1 className="text-display text-2xl text-charcoal mb-1">Property Management</h1>
             <p className="text-sm text-muted-foreground">
-              Manage listings, pricing, and property details.
+              {activeCount} active &middot; {soldCount} sold &middot; {rows.length} shown below
             </p>
           </div>
-          <button className="inline-flex items-center gap-2 bg-cedar text-white px-4 py-2 rounded-lg text-sm hover:bg-cedar/90 transition-colors">
-            <Plus className="h-4 w-4" />
-            Add Property
-          </button>
+          <Link
+            href="/listings"
+            className="inline-flex items-center gap-2 bg-cedar text-white px-4 py-2 rounded-lg text-sm hover:bg-cedar/90 transition-colors"
+          >
+            <ExternalLink className="h-4 w-4" />
+            View Public Listings
+          </Link>
         </div>
       </FadeIn>
 
       <FadeIn delay={0.05}>
         <div className="bg-white rounded-lg border border-border">
-          {/* Filters */}
-          <div className="flex items-center gap-3 p-4 border-b border-border">
-            <div className="relative flex-1 max-w-sm">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <input
-                type="text"
-                placeholder="Search properties..."
-                className="w-full pl-9 pr-3 py-2 text-sm border border-border rounded-lg bg-sand-light/50 focus:outline-none focus:ring-1 focus:ring-cedar/30"
-              />
+          {rows.length === 0 ? (
+            <div className="flex flex-col items-center justify-center py-16 text-center">
+              <Home className="h-10 w-10 text-muted-foreground/40 mb-3" />
+              <p className="text-sm font-medium text-charcoal mb-1">No listings found</p>
+              <p className="text-xs text-muted-foreground">MLS listings will appear here once synced.</p>
             </div>
-            <select className="text-sm border border-border rounded-lg px-3 py-2 bg-white text-charcoal">
-              <option>All Statuses</option>
-              <option>Active</option>
-              <option>Pending</option>
-              <option>Sold</option>
-            </select>
-            <select className="text-sm border border-border rounded-lg px-3 py-2 bg-white text-charcoal">
-              <option>All Agents</option>
-              <option>Sarah Mitchell</option>
-              <option>James Park</option>
-              <option>Lisa Chen</option>
-            </select>
-          </div>
-
-          {/* Table */}
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr className="border-b border-border text-left">
-                  <th className="px-4 py-3 text-xs font-medium text-muted-foreground uppercase tracking-wider">Property</th>
-                  <th className="px-4 py-3 text-xs font-medium text-muted-foreground uppercase tracking-wider">Price</th>
-                  <th className="px-4 py-3 text-xs font-medium text-muted-foreground uppercase tracking-wider">Details</th>
-                  <th className="px-4 py-3 text-xs font-medium text-muted-foreground uppercase tracking-wider">Status</th>
-                  <th className="px-4 py-3 text-xs font-medium text-muted-foreground uppercase tracking-wider">Agent</th>
-                  <th className="px-4 py-3 text-xs font-medium text-muted-foreground uppercase tracking-wider">Days</th>
-                  <th className="px-4 py-3 sr-only">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {placeholderProperties.map((prop) => (
-                  <tr key={prop.address} className="border-b border-border last:border-0 hover:bg-sand-light/30 transition-colors">
-                    <td className="px-4 py-3">
-                      <div className="flex items-center gap-3">
-                        <div className="h-8 w-8 rounded bg-sand-light flex items-center justify-center flex-shrink-0">
-                          <Home className="h-4 w-4 text-cedar" />
-                        </div>
-                        <div>
-                          <p className="text-sm font-medium text-charcoal">{prop.address}</p>
-                          <p className="text-xs text-muted-foreground flex items-center gap-1">
-                            <MapPin className="h-3 w-3" /> {prop.city}, MI
-                          </p>
-                        </div>
-                      </div>
-                    </td>
-                    <td className="px-4 py-3">
-                      <span className="text-sm font-medium text-charcoal flex items-center gap-1">
-                        <DollarSign className="h-3 w-3 text-muted-foreground" />
-                        {prop.price.replace('$', '')}
-                      </span>
-                    </td>
-                    <td className="px-4 py-3">
-                      <div className="flex items-center gap-3 text-xs text-muted-foreground">
-                        <span className="flex items-center gap-1"><Bed className="h-3 w-3" /> {prop.beds}</span>
-                        <span className="flex items-center gap-1"><Bath className="h-3 w-3" /> {prop.baths}</span>
-                        <span>{prop.sqft} sqft</span>
-                      </div>
-                    </td>
-                    <td className="px-4 py-3">
-                      <span className={`inline-block text-xs px-2 py-0.5 rounded-full font-medium ${statusBadge[prop.status] || ''}`}>
-                        {prop.status}
-                      </span>
-                    </td>
-                    <td className="px-4 py-3 text-sm text-muted-foreground">{prop.agent}</td>
-                    <td className="px-4 py-3 text-sm text-muted-foreground">{prop.days}</td>
-                    <td className="px-4 py-3 text-right">
-                      <button className="p-1 rounded hover:bg-sand-light transition-colors">
-                        <MoreHorizontal className="h-4 w-4 text-muted-foreground" />
-                      </button>
-                    </td>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead>
+                  <tr className="border-b border-border text-left">
+                    <th className="px-4 py-3 text-xs font-medium text-muted-foreground uppercase tracking-wider">Property</th>
+                    <th className="px-4 py-3 text-xs font-medium text-muted-foreground uppercase tracking-wider">Price</th>
+                    <th className="px-4 py-3 text-xs font-medium text-muted-foreground uppercase tracking-wider">Details</th>
+                    <th className="px-4 py-3 text-xs font-medium text-muted-foreground uppercase tracking-wider">Status</th>
+                    <th className="px-4 py-3 text-xs font-medium text-muted-foreground uppercase tracking-wider">Agent</th>
+                    <th className="px-4 py-3 text-xs font-medium text-muted-foreground uppercase tracking-wider">DOM</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                </thead>
+                <tbody>
+                  {rows.map((listing) => (
+                    <tr key={listing.listing_key} className="border-b border-border last:border-0 hover:bg-sand-light/30 transition-colors">
+                      <td className="px-4 py-3">
+                        <div className="flex items-center gap-3">
+                          <div className="h-8 w-8 rounded bg-sand-light flex items-center justify-center flex-shrink-0">
+                            <Home className="h-4 w-4 text-cedar" />
+                          </div>
+                          <div>
+                            <p className="text-sm font-medium text-charcoal">{formatStreetAddress(listing)}</p>
+                            <p className="text-xs text-muted-foreground flex items-center gap-1">
+                              <MapPin className="h-3 w-3" /> {formatCityLine(listing.city, listing.state, listing.zip)}
+                            </p>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="px-4 py-3">
+                        <span className="text-sm font-medium text-charcoal flex items-center gap-1">
+                          <DollarSign className="h-3 w-3 text-muted-foreground" />
+                          {formatPrice(listing.status === 'Closed' ? listing.close_price : listing.list_price).replace('$', '')}
+                        </span>
+                      </td>
+                      <td className="px-4 py-3">
+                        <div className="flex items-center gap-3 text-xs text-muted-foreground">
+                          <span className="flex items-center gap-1"><Bed className="h-3 w-3" /> {listing.bedrooms ?? '—'}</span>
+                          <span className="flex items-center gap-1"><Bath className="h-3 w-3" /> {formatBaths(listing.bathrooms_full, listing.bathrooms_half)}</span>
+                          <span>{formatSqft(listing.living_area)} sqft</span>
+                        </div>
+                      </td>
+                      <td className="px-4 py-3">
+                        <span className={`inline-block text-xs px-2 py-0.5 rounded-full font-medium ${statusColor(listing.status)}`}>
+                          {statusLabel(listing.status)}
+                        </span>
+                      </td>
+                      <td className="px-4 py-3 text-sm text-muted-foreground">{listing.list_agent_name ?? '—'}</td>
+                      <td className="px-4 py-3 text-sm text-muted-foreground">{listing.days_on_market ?? '—'}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
         </div>
       </FadeIn>
     </div>

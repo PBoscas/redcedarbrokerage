@@ -1,93 +1,119 @@
-'use client';
-
 import { FadeIn } from '@/components/ui/motion';
+import { sql } from '@/lib/db';
 import {
-  GripVertical, Eye, EyeOff, Pencil,
+  Eye, EyeOff,
   Image, Type, List, Star, MapPin, Home,
-  ChevronUp, ChevronDown,
 } from 'lucide-react';
 
-const homepageSections = [
-  { id: 'hero', label: 'Hero Banner', icon: Image, description: 'Full-width hero with headline, subtitle, and CTA', visible: true },
-  { id: 'featured', label: 'Featured Properties', icon: Home, description: 'Showcase of selected property listings', visible: true },
-  { id: 'about', label: 'About Section', icon: Type, description: 'Brief overview of Red Cedar Real Estate', visible: true },
-  { id: 'neighborhoods', label: 'Neighborhoods', icon: MapPin, description: 'Highlighted neighborhood guides', visible: true },
-  { id: 'testimonials', label: 'Testimonials', icon: Star, description: 'Client reviews and success stories', visible: true },
-  { id: 'agents', label: 'Meet the Team', icon: List, description: 'Featured agents grid', visible: false },
-  { id: 'cta', label: 'Call to Action', icon: Type, description: 'Bottom CTA banner for buyer/seller inquiries', visible: true },
+interface HomepageSectionRow {
+  id: string;
+  section_key: string;
+  title: string | null;
+  subtitle: string | null;
+  visible: boolean;
+  sort_order: number;
+}
+
+const defaultSections = [
+  { id: 'default-hero', section_key: 'hero', title: 'Hero Banner', subtitle: 'Full-width hero with headline, subtitle, and CTA', visible: true, sort_order: 1 },
+  { id: 'default-featured', section_key: 'featured', title: 'Featured Properties', subtitle: 'Showcase of selected property listings', visible: true, sort_order: 2 },
+  { id: 'default-about', section_key: 'about', title: 'About Section', subtitle: 'Brief overview of Red Cedar Real Estate', visible: true, sort_order: 3 },
+  { id: 'default-testimonials', section_key: 'testimonials', title: 'Testimonials', subtitle: 'Client reviews and success stories', visible: true, sort_order: 4 },
+  { id: 'default-agents', section_key: 'agents', title: 'Meet the Team', subtitle: 'Featured agents grid', visible: true, sort_order: 5 },
+  { id: 'default-cta', section_key: 'cta', title: 'Call to Action', subtitle: 'Bottom CTA banner for buyer/seller inquiries', visible: true, sort_order: 6 },
 ];
 
-export default function HomepagePage() {
+const sectionIcons: Record<string, typeof Image> = {
+  hero: Image,
+  featured: Home,
+  about: Type,
+  neighborhoods: MapPin,
+  testimonials: Star,
+  agents: List,
+  cta: Type,
+};
+
+async function getHomepageSections(): Promise<HomepageSectionRow[]> {
+  try {
+    const rows = await sql`
+      SELECT id, section_key, title, subtitle, visible, sort_order
+      FROM homepage_sections
+      ORDER BY sort_order
+    `;
+    return rows as unknown as HomepageSectionRow[];
+  } catch (error) {
+    console.error('Failed to fetch homepage sections:', error);
+    return [];
+  }
+}
+
+export default async function HomepagePage() {
+  const dbSections = await getHomepageSections();
+  const sections = dbSections.length > 0 ? dbSections : defaultSections;
+  const usingDefaults = dbSections.length === 0;
+
   return (
     <div className="max-w-4xl">
       <FadeIn>
-        <div className="flex items-center justify-between mb-8">
-          <div>
-            <h1 className="text-display text-2xl text-charcoal mb-1">Homepage Editor</h1>
-            <p className="text-sm text-muted-foreground">
-              Arrange and configure homepage sections. Drag to reorder.
+        <div className="mb-8">
+          <h1 className="text-display text-2xl text-charcoal mb-1">Homepage Sections</h1>
+          <p className="text-sm text-muted-foreground">
+            Current homepage section configuration and visibility.
+          </p>
+          {usingDefaults && (
+            <p className="text-xs text-amber-600 mt-2">
+              No sections found in database — showing default configuration.
             </p>
-          </div>
-          <button className="inline-flex items-center gap-2 bg-cedar text-white px-4 py-2 rounded-lg text-sm hover:bg-cedar/90 transition-colors">
-            <Eye className="h-4 w-4" />
-            Preview
-          </button>
+          )}
         </div>
       </FadeIn>
 
       <div className="space-y-3">
-        {homepageSections.map((section, i) => (
-          <FadeIn key={section.id} delay={0.03 * (i + 1)}>
-            <div className={`bg-white rounded-lg border border-border p-4 hover:border-cedar/30 transition-all ${!section.visible ? 'opacity-60' : ''}`}>
-              <div className="flex items-center gap-4">
-                {/* Drag handle */}
-                <div className="cursor-grab text-muted-foreground hover:text-charcoal">
-                  <GripVertical className="h-5 w-5" />
+        {sections.map((section, i) => {
+          const Icon = sectionIcons[section.section_key] || Type;
+          return (
+            <FadeIn key={section.id} delay={0.03 * (i + 1)}>
+              <div className={`bg-white rounded-lg border border-border p-4 transition-all ${!section.visible ? 'opacity-60' : ''}`}>
+                <div className="flex items-center gap-4">
+                  {/* Section icon */}
+                  <div className="h-9 w-9 rounded bg-sand-light flex items-center justify-center flex-shrink-0">
+                    <Icon className="h-4 w-4 text-cedar" />
+                  </div>
+
+                  {/* Label & description */}
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium text-charcoal">
+                      {section.title || section.section_key}
+                    </p>
+                    {section.subtitle && (
+                      <p className="text-xs text-muted-foreground truncate">{section.subtitle}</p>
+                    )}
+                  </div>
+
+                  {/* Sort order */}
+                  <span className="text-xs text-muted-foreground tabular-nums">
+                    #{section.sort_order}
+                  </span>
+
+                  {/* Visibility indicator */}
+                  <div className="p-2">
+                    {section.visible ? (
+                      <Eye className="h-4 w-4 text-cedar" />
+                    ) : (
+                      <EyeOff className="h-4 w-4 text-muted-foreground" />
+                    )}
+                  </div>
                 </div>
-
-                {/* Section icon */}
-                <div className="h-9 w-9 rounded bg-sand-light flex items-center justify-center flex-shrink-0">
-                  <section.icon className="h-4 w-4 text-cedar" />
-                </div>
-
-                {/* Label & description */}
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-charcoal">{section.label}</p>
-                  <p className="text-xs text-muted-foreground truncate">{section.description}</p>
-                </div>
-
-                {/* Reorder buttons */}
-                <div className="flex flex-col gap-0.5">
-                  <button disabled={i === 0} className="p-0.5 rounded hover:bg-sand-light disabled:opacity-30 transition-colors">
-                    <ChevronUp className="h-3.5 w-3.5 text-muted-foreground" />
-                  </button>
-                  <button disabled={i === homepageSections.length - 1} className="p-0.5 rounded hover:bg-sand-light disabled:opacity-30 transition-colors">
-                    <ChevronDown className="h-3.5 w-3.5 text-muted-foreground" />
-                  </button>
-                </div>
-
-                {/* Visibility toggle */}
-                <button className="p-2 rounded hover:bg-sand-light transition-colors">
-                  {section.visible ? (
-                    <Eye className="h-4 w-4 text-cedar" />
-                  ) : (
-                    <EyeOff className="h-4 w-4 text-muted-foreground" />
-                  )}
-                </button>
-
-                {/* Edit button */}
-                <button className="p-2 rounded hover:bg-sand-light transition-colors">
-                  <Pencil className="h-4 w-4 text-muted-foreground" />
-                </button>
               </div>
-            </div>
-          </FadeIn>
-        ))}
+            </FadeIn>
+          );
+        })}
       </div>
 
       <FadeIn delay={0.3}>
         <p className="text-xs text-muted-foreground mt-6 text-center">
-          Changes are saved automatically. Click &quot;Preview&quot; to see the live homepage.
+          {sections.length} section{sections.length !== 1 ? 's' : ''} configured.
+          {' '}{sections.filter(s => s.visible).length} visible on the homepage.
         </p>
       </FadeIn>
     </div>

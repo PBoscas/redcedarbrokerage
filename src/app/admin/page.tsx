@@ -1,26 +1,53 @@
-'use client';
-
+import { sql } from '@/lib/db';
 import { FadeIn } from '@/components/ui/motion';
 import {
   Users, UserCheck, Home, MessageSquare, Eye,
-  FileText, TrendingUp, ArrowRight,
+  FileText, ArrowRight,
 } from 'lucide-react';
 import Link from 'next/link';
 
-const overviewStats = [
-  { label: 'Total Agents', value: '12', icon: UserCheck, href: '/admin/agents' },
-  { label: 'Active Properties', value: '24', icon: Home, href: '/admin/properties' },
-  { label: 'New Inquiries', value: '8', icon: MessageSquare, href: '/admin/inquiries' },
-  { label: 'Page Views (30d)', value: '15,423', icon: Eye, href: '/admin/analytics' },
-];
+function timeAgo(date: string | Date): string {
+  const now = new Date();
+  const then = new Date(date);
+  const seconds = Math.floor((now.getTime() - then.getTime()) / 1000);
 
-const recentInquiries = [
-  { name: 'Jennifer K.', type: 'Buying', date: '2 hours ago' },
-  { name: 'David & Sarah L.', type: 'Selling', date: '5 hours ago' },
-  { name: 'Marcus J.', type: 'Recruiting', date: '1 day ago' },
-];
+  if (seconds < 60) return 'just now';
+  const minutes = Math.floor(seconds / 60);
+  if (minutes < 60) return `${minutes}m ago`;
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `${hours}h ago`;
+  const days = Math.floor(hours / 24);
+  if (days < 30) return `${days}d ago`;
+  return then.toLocaleDateString();
+}
 
-export default function AdminOverviewPage() {
+export default async function AdminOverviewPage() {
+  const [agentRows, listingRows, inquiryCountRows, recentInquiryRows] =
+    await Promise.all([
+      sql`SELECT COUNT(*) as count FROM agents WHERE status = 'active'`,
+      sql`SELECT COUNT(*) as count FROM mls_listings WHERE status IN ('Active', 'Active Under Contract', 'Coming Soon')`,
+      sql`SELECT COUNT(*) as count FROM contact_submissions WHERE status = 'new'`,
+      sql`SELECT id, name, email, type, created_at FROM contact_submissions ORDER BY created_at DESC LIMIT 5`,
+    ]);
+
+  const agentCount = agentRows[0]?.count ?? 0;
+  const listingCount = listingRows[0]?.count ?? 0;
+  const inquiryCount = inquiryCountRows[0]?.count ?? 0;
+  const recentInquiries = recentInquiryRows as {
+    id: string;
+    name: string;
+    email: string;
+    type: string;
+    created_at: string;
+  }[];
+
+  const overviewStats = [
+    { label: 'Total Agents', value: String(agentCount), icon: UserCheck, href: '/admin/agents' },
+    { label: 'Active Properties', value: String(listingCount), icon: Home, href: '/admin/properties' },
+    { label: 'New Inquiries', value: String(inquiryCount), icon: MessageSquare, href: '/admin/inquiries' },
+    { label: 'Page Views (30d)', value: '—', icon: Eye, href: '/admin/analytics' },
+  ];
+
   return (
     <div className="max-w-6xl">
       <FadeIn>
@@ -54,17 +81,24 @@ export default function AdminOverviewPage() {
               <h2 className="text-sm font-medium text-charcoal">Recent Inquiries</h2>
               <Link href="/admin/inquiries" className="text-xs text-cedar hover:underline">View All</Link>
             </div>
-            <div className="space-y-3">
-              {recentInquiries.map((inquiry, i) => (
-                <div key={i} className="flex items-center justify-between py-2 border-b border-border last:border-0">
-                  <div>
-                    <p className="text-sm text-charcoal">{inquiry.name}</p>
-                    <p className="text-xs text-muted-foreground">{inquiry.type}</p>
+            {recentInquiries.length > 0 ? (
+              <div className="space-y-3">
+                {recentInquiries.map((inquiry) => (
+                  <div key={inquiry.id} className="flex items-center justify-between py-2 border-b border-border last:border-0">
+                    <div>
+                      <p className="text-sm text-charcoal">{inquiry.name}</p>
+                      <p className="text-xs text-muted-foreground">{inquiry.type}</p>
+                    </div>
+                    <span className="text-xs text-muted-foreground">{timeAgo(inquiry.created_at)}</span>
                   </div>
-                  <span className="text-xs text-muted-foreground">{inquiry.date}</span>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            ) : (
+              <div className="py-8 text-center">
+                <MessageSquare className="h-8 w-8 text-muted-foreground/40 mx-auto mb-2" />
+                <p className="text-sm text-muted-foreground">No inquiries yet</p>
+              </div>
+            )}
           </div>
         </FadeIn>
 

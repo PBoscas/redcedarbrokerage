@@ -13,10 +13,18 @@ export default async function AdminLayout({
     redirect('/login');
   }
 
-  const userRole = (session.user as { role?: string }).role;
+  const user = session.user as { name?: string; email?: string; role?: string };
+  const userRole = user.role;
   if (userRole !== 'admin') {
     redirect('/dashboard');
   }
 
-  return <AdminLayoutShell>{children}</AdminLayoutShell>;
+  return (
+    <AdminLayoutShell
+      userName={user.name || user.email || 'Admin'}
+      userRole={userRole || 'admin'}
+    >
+      {children}
+    </AdminLayoutShell>
+  );
 }

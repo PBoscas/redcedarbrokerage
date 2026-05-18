@@ -1,45 +1,34 @@
-'use client';
-
+import { sql } from '@/lib/db';
 import { FadeIn } from '@/components/ui/motion';
 import {
-  BarChart3, Eye, Users, MousePointerClick,
-  TrendingUp, ArrowUpRight, ArrowDownRight,
-  Clock, Globe, Smartphone, Monitor,
+  BarChart3, Home, UserCheck, TrendingUp,
+  Clock, MapPin, BarChart,
 } from 'lucide-react';
 
-const overviewStats = [
-  { label: 'Page Views', value: '15,423', change: '+12.3%', up: true, icon: Eye },
-  { label: 'Unique Visitors', value: '4,891', change: '+8.7%', up: true, icon: Users },
-  { label: 'Avg. Session Duration', value: '3m 24s', change: '+5.1%', up: true, icon: Clock },
-  { label: 'Bounce Rate', value: '42.3%', change: '-2.1%', up: false, icon: MousePointerClick },
-];
+export default async function AnalyticsPage() {
+  const [listingRows, agentRows, cityRows] = await Promise.all([
+    sql`SELECT
+      COUNT(*) FILTER (WHERE status IN ('Active', 'Active Under Contract', 'Coming Soon')) as active,
+      COUNT(*) FILTER (WHERE status IN ('Pending', 'Active Under Contract')) as pending,
+      COUNT(*) FILTER (WHERE status = 'Closed') as sold,
+      COUNT(*) as total
+    FROM mls_listings`,
+    sql`SELECT COUNT(*) as count FROM agents WHERE status = 'active'`,
+    sql`SELECT city, COUNT(*) as count FROM mls_listings WHERE city IS NOT NULL GROUP BY city ORDER BY count DESC LIMIT 8`,
+  ]);
 
-const topPages = [
-  { page: '/properties', views: 4210, percentage: 27 },
-  { page: '/', views: 3856, percentage: 25 },
-  { page: '/agents', views: 2104, percentage: 14 },
-  { page: '/neighborhoods/east-grand-rapids', views: 1543, percentage: 10 },
-  { page: '/insights', views: 1203, percentage: 8 },
-  { page: '/contact', views: 987, percentage: 6 },
-  { page: '/buyers', views: 876, percentage: 6 },
-  { page: '/sellers', views: 644, percentage: 4 },
-];
+  const listings = listingRows[0] ?? { active: 0, pending: 0, sold: 0, total: 0 };
+  const agentCount = agentRows[0]?.count ?? 0;
+  const topCities = cityRows as { city: string; count: number }[];
+  const maxCityCount = topCities.length > 0 ? Math.max(...topCities.map((c) => Number(c.count))) : 1;
 
-const trafficSources = [
-  { source: 'Organic Search', visits: 6840, percentage: 44 },
-  { source: 'Direct', visits: 3720, percentage: 24 },
-  { source: 'Social Media', visits: 2325, percentage: 15 },
-  { source: 'Referral', visits: 1550, percentage: 10 },
-  { source: 'Email', visits: 988, percentage: 7 },
-];
+  const overviewStats = [
+    { label: 'Active Listings', value: String(listings.active), icon: Home },
+    { label: 'Pending / Under Contract', value: String(listings.pending), icon: Clock },
+    { label: 'Sold / Closed', value: String(listings.sold), icon: TrendingUp },
+    { label: 'Active Agents', value: String(agentCount), icon: UserCheck },
+  ];
 
-const deviceBreakdown = [
-  { device: 'Desktop', icon: Monitor, percentage: 52 },
-  { device: 'Mobile', icon: Smartphone, percentage: 40 },
-  { device: 'Tablet', icon: Monitor, percentage: 8 },
-];
-
-export default function AnalyticsPage() {
   return (
     <div className="max-w-6xl">
       <FadeIn>
@@ -47,15 +36,9 @@ export default function AnalyticsPage() {
           <div>
             <h1 className="text-display text-2xl text-charcoal mb-1">Analytics</h1>
             <p className="text-sm text-muted-foreground">
-              Website performance and visitor insights for the last 30 days.
+              Listing statistics and market overview.
             </p>
           </div>
-          <select className="text-sm border border-border rounded-lg px-3 py-2 bg-white text-charcoal">
-            <option>Last 30 days</option>
-            <option>Last 7 days</option>
-            <option>Last 90 days</option>
-            <option>This year</option>
-          </select>
         </div>
       </FadeIn>
 
@@ -66,10 +49,6 @@ export default function AnalyticsPage() {
             <div className="bg-white rounded-lg border border-border p-5">
               <div className="flex items-center justify-between mb-3">
                 <stat.icon className="h-5 w-5 text-cedar" />
-                <span className={`text-xs font-medium flex items-center gap-0.5 ${stat.up ? 'text-green-700' : 'text-red-600'}`}>
-                  {stat.up ? <ArrowUpRight className="h-3 w-3" /> : <ArrowDownRight className="h-3 w-3" />}
-                  {stat.change}
-                </span>
               </div>
               <p className="text-2xl font-semibold text-charcoal mb-1">{stat.value}</p>
               <p className="text-xs text-muted-foreground">{stat.label}</p>
@@ -78,98 +57,106 @@ export default function AnalyticsPage() {
         ))}
       </div>
 
-      {/* Chart placeholder */}
-      <FadeIn delay={0.1}>
-        <div className="bg-white rounded-lg border border-border p-6 mb-6">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-sm font-medium text-charcoal flex items-center gap-2">
-              <BarChart3 className="h-4 w-4 text-cedar" /> Traffic Overview
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+        {/* Listings by city */}
+        <FadeIn delay={0.1}>
+          <div className="bg-white rounded-lg border border-border p-6">
+            <h2 className="text-sm font-medium text-charcoal mb-4 flex items-center gap-2">
+              <MapPin className="h-4 w-4 text-cedar" /> Listings by City
             </h2>
-            <div className="flex gap-2">
-              <button className="text-xs px-2 py-1 rounded bg-cedar/10 text-cedar font-medium">Views</button>
-              <button className="text-xs px-2 py-1 rounded text-muted-foreground hover:bg-sand-light transition-colors">Visitors</button>
-            </div>
+            {topCities.length > 0 ? (
+              <div className="space-y-3">
+                {topCities.map((city) => (
+                  <div key={city.city} className="flex items-center gap-3">
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between mb-1">
+                        <p className="text-xs font-medium text-charcoal truncate">{city.city}</p>
+                        <p className="text-xs text-muted-foreground">{city.count}</p>
+                      </div>
+                      <div className="h-1.5 bg-sand-light rounded-full overflow-hidden">
+                        <div
+                          className="h-full bg-cedar/30 rounded-full"
+                          style={{ width: `${(Number(city.count) / maxCityCount) * 100}%` }}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="py-8 text-center">
+                <MapPin className="h-8 w-8 text-muted-foreground/40 mx-auto mb-2" />
+                <p className="text-sm text-muted-foreground">No listing data yet</p>
+              </div>
+            )}
           </div>
-          <div className="h-48 bg-sand-light/50 rounded flex items-center justify-center">
-            <p className="text-sm text-muted-foreground flex items-center gap-2">
-              <TrendingUp className="h-4 w-4" /> Chart visualization placeholder
-            </p>
-          </div>
-        </div>
-      </FadeIn>
+        </FadeIn>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Top pages */}
+        {/* Listing totals summary */}
         <FadeIn delay={0.15}>
-          <div className="bg-white rounded-lg border border-border p-6 lg:col-span-1">
-            <h2 className="text-sm font-medium text-charcoal mb-4 flex items-center gap-2">
-              <Globe className="h-4 w-4 text-cedar" /> Top Pages
-            </h2>
-            <div className="space-y-3">
-              {topPages.map((page) => (
-                <div key={page.page} className="flex items-center gap-3">
-                  <div className="flex-1 min-w-0">
-                    <p className="text-xs font-medium text-charcoal truncate">{page.page}</p>
-                    <div className="mt-1 h-1.5 bg-sand-light rounded-full overflow-hidden">
-                      <div className="h-full bg-cedar/30 rounded-full" style={{ width: `${page.percentage}%` }} />
-                    </div>
-                  </div>
-                  <span className="text-xs text-muted-foreground w-12 text-right">{page.views.toLocaleString()}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </FadeIn>
-
-        {/* Traffic sources */}
-        <FadeIn delay={0.2}>
           <div className="bg-white rounded-lg border border-border p-6">
             <h2 className="text-sm font-medium text-charcoal mb-4 flex items-center gap-2">
-              <TrendingUp className="h-4 w-4 text-cedar" /> Traffic Sources
-            </h2>
-            <div className="space-y-3">
-              {trafficSources.map((source) => (
-                <div key={source.source} className="flex items-center gap-3">
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center justify-between mb-1">
-                      <p className="text-xs font-medium text-charcoal">{source.source}</p>
-                      <p className="text-xs text-muted-foreground">{source.percentage}%</p>
-                    </div>
-                    <div className="h-1.5 bg-sand-light rounded-full overflow-hidden">
-                      <div className="h-full bg-cedar/30 rounded-full" style={{ width: `${source.percentage}%` }} />
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </FadeIn>
-
-        {/* Devices */}
-        <FadeIn delay={0.25}>
-          <div className="bg-white rounded-lg border border-border p-6">
-            <h2 className="text-sm font-medium text-charcoal mb-4 flex items-center gap-2">
-              <Smartphone className="h-4 w-4 text-cedar" /> Devices
+              <BarChart className="h-4 w-4 text-cedar" /> Listing Summary
             </h2>
             <div className="space-y-4">
-              {deviceBreakdown.map((device) => (
-                <div key={device.device} className="flex items-center gap-3">
-                  <device.icon className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+              {[
+                { label: 'Active', count: Number(listings.active), color: 'bg-green-500/60' },
+                { label: 'Pending / Under Contract', count: Number(listings.pending), color: 'bg-yellow-500/60' },
+                { label: 'Sold / Closed', count: Number(listings.sold), color: 'bg-cedar/40' },
+              ].map((row) => (
+                <div key={row.label} className="flex items-center gap-3">
                   <div className="flex-1">
                     <div className="flex items-center justify-between mb-1">
-                      <p className="text-xs font-medium text-charcoal">{device.device}</p>
-                      <p className="text-xs text-muted-foreground">{device.percentage}%</p>
+                      <p className="text-xs font-medium text-charcoal">{row.label}</p>
+                      <p className="text-xs text-muted-foreground">{row.count}</p>
                     </div>
                     <div className="h-1.5 bg-sand-light rounded-full overflow-hidden">
-                      <div className="h-full bg-cedar/30 rounded-full" style={{ width: `${device.percentage}%` }} />
+                      <div
+                        className={`h-full ${row.color} rounded-full`}
+                        style={{
+                          width: Number(listings.total) > 0
+                            ? `${(row.count / Number(listings.total)) * 100}%`
+                            : '0%',
+                        }}
+                      />
                     </div>
                   </div>
                 </div>
               ))}
+              <div className="pt-2 border-t border-border">
+                <div className="flex items-center justify-between">
+                  <p className="text-xs font-medium text-charcoal">Total Listings</p>
+                  <p className="text-sm font-semibold text-charcoal">{String(listings.total)}</p>
+                </div>
+              </div>
             </div>
           </div>
         </FadeIn>
       </div>
+
+      {/* Google Analytics placeholder sections */}
+      <FadeIn delay={0.2}>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {[
+            { title: 'Traffic Overview', description: 'Page views, unique visitors, session duration, and bounce rate' },
+            { title: 'Traffic Sources', description: 'Organic search, direct, social media, and referral breakdown' },
+            { title: 'Device Breakdown', description: 'Desktop, mobile, and tablet visitor statistics' },
+          ].map((section) => (
+            <div key={section.title} className="bg-white rounded-lg border border-border p-6">
+              <h2 className="text-sm font-medium text-charcoal mb-4 flex items-center gap-2">
+                <BarChart3 className="h-4 w-4 text-cedar" /> {section.title}
+              </h2>
+              <div className="py-8 text-center">
+                <BarChart3 className="h-8 w-8 text-muted-foreground/30 mx-auto mb-3" />
+                <p className="text-sm font-medium text-muted-foreground mb-1">Coming soon</p>
+                <p className="text-xs text-muted-foreground/70">
+                  {section.description} will be available once Google Analytics is connected.
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </FadeIn>
     </div>
   );
 }

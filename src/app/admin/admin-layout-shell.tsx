@@ -29,8 +29,12 @@ const adminNav = [
 
 export function AdminLayoutShell({
   children,
+  userName,
+  userRole,
 }: {
   children: React.ReactNode;
+  userName: string;
+  userRole: string;
 }) {
   const pathname = usePathname();
   const router = useRouter();
@@ -117,7 +121,8 @@ export function AdminLayoutShell({
           </button>
           <div className="flex-1" />
           <div className="flex items-center gap-3">
-            <span className="text-xs bg-cedar/10 text-cedar px-2 py-1 rounded font-medium">Super Admin</span>
+            <span className="text-xs text-muted-foreground">{userName}</span>
+            <span className="text-xs bg-cedar/10 text-cedar px-2 py-1 rounded font-medium capitalize">{userRole}</span>
             <div className="w-8 h-8 rounded-full bg-cedar/10 flex items-center justify-center">
               <Shield className="h-4 w-4 text-cedar" />
             </div>

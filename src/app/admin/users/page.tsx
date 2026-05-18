@@ -1,26 +1,64 @@
-'use client';
-
 import { FadeIn } from '@/components/ui/motion';
+import { sql } from '@/lib/db';
 import {
-  Users, Shield, ShieldCheck, MoreHorizontal,
-  Search, Plus, Mail,
+  Users, Shield, ShieldCheck, Mail, Plus,
 } from 'lucide-react';
 
-const placeholderUsers = [
-  { name: 'Sarah Mitchell', email: 'sarah@redcedar.com', role: 'Admin', status: 'Active', lastLogin: '2 hours ago' },
-  { name: 'James Park', email: 'james@redcedar.com', role: 'Agent', status: 'Active', lastLogin: '1 day ago' },
-  { name: 'Lisa Chen', email: 'lisa@redcedar.com', role: 'Agent', status: 'Active', lastLogin: '3 days ago' },
-  { name: 'Robert Adams', email: 'robert@redcedar.com', role: 'Editor', status: 'Active', lastLogin: '5 hours ago' },
-  { name: 'Maria Gonzalez', email: 'maria@redcedar.com', role: 'Agent', status: 'Inactive', lastLogin: '2 weeks ago' },
-];
+interface UserRow {
+  id: string;
+  name: string | null;
+  email: string;
+  role: string | null;
+  createdAt: string;
+  banned: boolean | null;
+  agent_title: string | null;
+  agent_status: string | null;
+}
+
+async function getUsers(): Promise<UserRow[]> {
+  try {
+    const rows = await sql`
+      SELECT u.id, u.name, u.email, u.role, u."createdAt", u.banned,
+             a.title as agent_title, a.status as agent_status
+      FROM neon_auth."user" u
+      LEFT JOIN agents a ON a.user_id = u.id
+      ORDER BY u.name
+    `;
+    return rows as unknown as UserRow[];
+  } catch (error) {
+    console.error('Failed to fetch users:', error);
+    return [];
+  }
+}
 
 const roleBadge: Record<string, string> = {
-  Admin: 'bg-cedar/10 text-cedar',
-  Agent: 'bg-blue-50 text-blue-700',
-  Editor: 'bg-amber-50 text-amber-700',
+  admin: 'bg-cedar/10 text-cedar',
+  user: 'bg-blue-50 text-blue-700',
 };
 
-export default function UsersPage() {
+function formatDate(dateStr: string): string {
+  try {
+    const date = new Date(dateStr);
+    return date.toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+    });
+  } catch {
+    return '—';
+  }
+}
+
+function getUserStatus(user: UserRow): { label: string; active: boolean } {
+  if (user.banned) return { label: 'Banned', active: false };
+  if (user.agent_status === 'active') return { label: 'Active Agent', active: true };
+  if (user.agent_status) return { label: `Agent (${user.agent_status})`, active: false };
+  return { label: 'Active', active: true };
+}
+
+export default async function UsersPage() {
+  const users = await getUsers();
+
   return (
     <div className="max-w-6xl">
       <FadeIn>
@@ -40,24 +78,6 @@ export default function UsersPage() {
 
       <FadeIn delay={0.05}>
         <div className="bg-white rounded-lg border border-border">
-          {/* Search / Filter bar */}
-          <div className="flex items-center gap-3 p-4 border-b border-border">
-            <div className="relative flex-1 max-w-sm">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <input
-                type="text"
-                placeholder="Search users..."
-                className="w-full pl-9 pr-3 py-2 text-sm border border-border rounded-lg bg-sand-light/50 focus:outline-none focus:ring-1 focus:ring-cedar/30"
-              />
-            </div>
-            <select className="text-sm border border-border rounded-lg px-3 py-2 bg-white text-charcoal">
-              <option>All Roles</option>
-              <option>Admin</option>
-              <option>Agent</option>
-              <option>Editor</option>
-            </select>
-          </div>
-
           {/* Table */}
           <table className="w-full">
             <thead>
@@ -65,44 +85,52 @@ export default function UsersPage() {
                 <th className="px-4 py-3 text-xs font-medium text-muted-foreground uppercase tracking-wider">User</th>
                 <th className="px-4 py-3 text-xs font-medium text-muted-foreground uppercase tracking-wider">Role</th>
                 <th className="px-4 py-3 text-xs font-medium text-muted-foreground uppercase tracking-wider">Status</th>
-                <th className="px-4 py-3 text-xs font-medium text-muted-foreground uppercase tracking-wider">Last Login</th>
-                <th className="px-4 py-3 text-xs font-medium text-muted-foreground uppercase tracking-wider sr-only">Actions</th>
+                <th className="px-4 py-3 text-xs font-medium text-muted-foreground uppercase tracking-wider">Joined</th>
               </tr>
             </thead>
             <tbody>
-              {placeholderUsers.map((user) => (
-                <tr key={user.email} className="border-b border-border last:border-0 hover:bg-sand-light/30 transition-colors">
-                  <td className="px-4 py-3">
-                    <div className="flex items-center gap-3">
-                      <div className="h-8 w-8 rounded-full bg-sand-light flex items-center justify-center">
-                        <Users className="h-4 w-4 text-cedar" />
-                      </div>
-                      <div>
-                        <p className="text-sm font-medium text-charcoal">{user.name}</p>
-                        <p className="text-xs text-muted-foreground flex items-center gap-1">
-                          <Mail className="h-3 w-3" /> {user.email}
-                        </p>
-                      </div>
-                    </div>
-                  </td>
-                  <td className="px-4 py-3">
-                    <span className={`inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded-full font-medium ${roleBadge[user.role] || ''}`}>
-                      {user.role === 'Admin' ? <ShieldCheck className="h-3 w-3" /> : <Shield className="h-3 w-3" />}
-                      {user.role}
-                    </span>
-                  </td>
-                  <td className="px-4 py-3">
-                    <span className={`inline-block h-2 w-2 rounded-full mr-2 ${user.status === 'Active' ? 'bg-green-500' : 'bg-gray-300'}`} />
-                    <span className="text-sm text-charcoal">{user.status}</span>
-                  </td>
-                  <td className="px-4 py-3 text-sm text-muted-foreground">{user.lastLogin}</td>
-                  <td className="px-4 py-3 text-right">
-                    <button className="p-1 rounded hover:bg-sand-light transition-colors">
-                      <MoreHorizontal className="h-4 w-4 text-muted-foreground" />
-                    </button>
+              {users.length === 0 ? (
+                <tr>
+                  <td colSpan={4} className="px-4 py-8 text-center text-sm text-muted-foreground">
+                    No users found.
                   </td>
                 </tr>
-              ))}
+              ) : (
+                users.map((user) => {
+                  const status = getUserStatus(user);
+                  const role = user.role || 'user';
+                  return (
+                    <tr key={user.id} className="border-b border-border last:border-0 hover:bg-sand-light/30 transition-colors">
+                      <td className="px-4 py-3">
+                        <div className="flex items-center gap-3">
+                          <div className="h-8 w-8 rounded-full bg-sand-light flex items-center justify-center">
+                            <Users className="h-4 w-4 text-cedar" />
+                          </div>
+                          <div>
+                            <p className="text-sm font-medium text-charcoal">{user.name || '(no name)'}</p>
+                            <p className="text-xs text-muted-foreground flex items-center gap-1">
+                              <Mail className="h-3 w-3" /> {user.email}
+                            </p>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="px-4 py-3">
+                        <span className={`inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded-full font-medium ${roleBadge[role] || 'bg-gray-50 text-gray-700'}`}>
+                          {role === 'admin' ? <ShieldCheck className="h-3 w-3" /> : <Shield className="h-3 w-3" />}
+                          {role}
+                        </span>
+                      </td>
+                      <td className="px-4 py-3">
+                        <span className={`inline-block h-2 w-2 rounded-full mr-2 ${status.active ? 'bg-green-500' : 'bg-gray-300'}`} />
+                        <span className="text-sm text-charcoal">{status.label}</span>
+                      </td>
+                      <td className="px-4 py-3 text-sm text-muted-foreground">
+                        {formatDate(user.createdAt)}
+                      </td>
+                    </tr>
+                  );
+                })
+              )}
             </tbody>
           </table>
         </div>
