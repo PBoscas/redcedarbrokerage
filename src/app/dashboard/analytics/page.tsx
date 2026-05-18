@@ -1,21 +1,30 @@
-'use client';
-
 import { FadeIn } from '@/components/ui/motion';
-import { Eye, Home, MessageSquare, TrendingUp } from 'lucide-react';
+import { Home, Users, BarChart3 } from 'lucide-react';
+import { redirect } from 'next/navigation';
+import { getServerSession } from '@/lib/auth/session';
+import { getListingCounts } from '@/lib/queries/listings';
+import { sql } from '@/lib/db';
 
-const stats = [
-  { label: 'Profile Views', value: '1,247', icon: Eye, period: 'Last 30 days' },
-  { label: 'Property Views', value: '3,891', icon: Home, period: 'Last 30 days' },
-  { label: 'Inquiry Clicks', value: '23', icon: MessageSquare, period: 'Last 30 days' },
-  { label: 'Engagement Rate', value: '3.2%', icon: TrendingUp, period: 'Last 30 days' },
-];
+export default async function AnalyticsPage() {
+  const session = await getServerSession();
+  if (!session?.user) redirect('/login');
 
-export default function AnalyticsPage() {
+  const listingCounts = await getListingCounts();
+  const agentCountRows = await sql`SELECT COUNT(*) as count FROM agents WHERE status = 'active'`;
+  const agentCount = Number(agentCountRows[0]?.count) || 0;
+
+  const stats = [
+    { label: 'Active Listings', value: String(listingCounts.active), icon: Home, period: 'Current' },
+    { label: 'Sold Properties', value: String(listingCounts.sold), icon: Home, period: 'All time' },
+    { label: 'Pending', value: String(listingCounts.pending), icon: BarChart3, period: 'Current' },
+    { label: 'Active Agents', value: String(agentCount), icon: Users, period: 'Team' },
+  ];
+
   return (
     <div className="max-w-6xl">
       <FadeIn>
         <h1 className="text-display text-2xl text-charcoal mb-1">Analytics</h1>
-        <p className="text-sm text-muted-foreground mb-8">Track your profile and property performance.</p>
+        <p className="text-sm text-muted-foreground mb-8">Brokerage performance overview.</p>
       </FadeIn>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
@@ -33,12 +42,11 @@ export default function AnalyticsPage() {
         ))}
       </div>
 
-      {/* Placeholder chart area */}
       <FadeIn delay={0.1}>
         <div className="bg-white rounded-lg border border-border p-6">
-          <h2 className="text-sm font-medium text-charcoal mb-4">Profile Views Over Time</h2>
+          <h2 className="text-sm font-medium text-charcoal mb-4">Detailed Analytics</h2>
           <div className="h-64 bg-sand-light rounded flex items-center justify-center">
-            <p className="text-sm text-muted-foreground">Chart visualization will appear here</p>
+            <p className="text-sm text-muted-foreground">Detailed analytics and charts coming soon</p>
           </div>
         </div>
       </FadeIn>

@@ -111,6 +111,18 @@ export async function getAgentAwards(agentId: string): Promise<AgentAwardRow[]> 
   return rows as AgentAwardRow[];
 }
 
+export async function getAgentByUserId(userId: string): Promise<AgentRow | null> {
+  const rows = await sql`
+    SELECT id, slug, first_name, last_name, title, bio_short, bio_full,
+           position_statement, headshot_url, cover_image_url, email, phone,
+           role, license_number, license_state, status, sort_order
+    FROM agents
+    WHERE user_id = ${userId}
+    LIMIT 1
+  `;
+  return (rows[0] as AgentRow) ?? null;
+}
+
 export async function getAllAgents(): Promise<AgentRow[]> {
   const rows = await sql`
     SELECT id, slug, first_name, last_name, title, bio_short, bio_full,

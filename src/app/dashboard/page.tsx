@@ -1,18 +1,39 @@
-'use client';
-
 import { FadeIn } from '@/components/ui/motion';
 import {
-  BarChart3, Eye, Home, MessageSquare,
-  User, ArrowRight, CheckCircle, AlertCircle,
+  BarChart3, Home, MessageSquare,
+  User, ArrowRight, CheckCircle,
 } from 'lucide-react';
 import Link from 'next/link';
+import { redirect } from 'next/navigation';
+import { getServerSession } from '@/lib/auth/session';
+import { getAgentByUserId } from '@/lib/queries/agents';
+import { getListingCounts } from '@/lib/queries/listings';
 
-const stats = [
-  { label: 'Profile Views', value: '1,247', icon: Eye, change: '+12%' },
-  { label: 'Property Views', value: '3,891', icon: Home, change: '+8%' },
-  { label: 'Inquiries', value: '23', icon: MessageSquare, change: '+3' },
-  { label: 'Profile Score', value: '85%', icon: CheckCircle, change: 'Good' },
-];
+function computeProfileCompleteness(agent: {
+  first_name: string;
+  last_name: string;
+  title: string;
+  bio_short: string;
+  bio_full: string | null;
+  headshot_url: string | null;
+  phone: string | null;
+  email: string;
+  position_statement: string | null;
+}) {
+  const fields = [
+    !!agent.first_name,
+    !!agent.last_name,
+    !!agent.title,
+    !!agent.bio_short,
+    !!agent.bio_full,
+    !!agent.headshot_url,
+    !!agent.phone,
+    !!agent.email,
+    !!agent.position_statement,
+  ];
+  const filled = fields.filter(Boolean).length;
+  return Math.round((filled / fields.length) * 100);
+}
 
 const quickActions = [
   { label: 'Edit My Profile', href: '/dashboard/profile', icon: User },
@@ -21,11 +42,34 @@ const quickActions = [
   { label: 'View Analytics', href: '/dashboard/analytics', icon: BarChart3 },
 ];
 
-export default function DashboardPage() {
+export default async function DashboardPage() {
+  const session = await getServerSession();
+  if (!session?.user) redirect('/login');
+
+  const agent = await getAgentByUserId(session.user.id);
+  const listingCounts = await getListingCounts();
+  const profileScore = agent ? computeProfileCompleteness(agent) : 0;
+
+  const stats = [
+    { label: 'Active Listings', value: String(listingCounts.active), icon: Home, change: 'Brokerage' },
+    { label: 'Sold', value: String(listingCounts.sold), icon: CheckCircle, change: 'All time' },
+    { label: 'Pending', value: String(listingCounts.pending), icon: MessageSquare, change: 'Current' },
+    { label: 'Profile Score', value: `${profileScore}%`, icon: User, change: profileScore >= 80 ? 'Good' : 'Needs work' },
+  ];
+
+  const missingFields: string[] = [];
+  if (agent) {
+    if (!agent.bio_full) missingFields.push('full biography');
+    if (!agent.headshot_url) missingFields.push('headshot photo');
+    if (!agent.position_statement) missingFields.push('position statement');
+  }
+
   return (
     <div className="max-w-6xl">
       <FadeIn>
-        <h1 className="text-display text-2xl text-charcoal mb-1">Welcome back</h1>
+        <h1 className="text-display text-2xl text-charcoal mb-1">
+          Welcome back, {agent?.first_name ?? session.user.name?.split(' ')[0] ?? 'Agent'}
+        </h1>
         <p className="text-sm text-muted-foreground mb-8">
           Here&apos;s an overview of your Red Cedar profile and activity.
         </p>
@@ -66,30 +110,32 @@ export default function DashboardPage() {
       </FadeIn>
 
       {/* Profile completeness */}
-      <FadeIn delay={0.2}>
-        <div className="bg-white rounded-lg border border-border p-6">
-          <div className="flex items-start gap-4">
-            <div className="w-10 h-10 rounded bg-gold/10 flex items-center justify-center flex-shrink-0">
-              <AlertCircle className="h-5 w-5 text-gold" />
-            </div>
-            <div>
-              <h3 className="text-sm font-medium text-charcoal mb-1">Complete Your Profile</h3>
-              <p className="text-sm text-muted-foreground mb-4">
-                Your profile is 85% complete. Add a biography and upload your headshot to reach 100%.
-              </p>
-              <div className="w-full bg-sand rounded-full h-2 mb-3">
-                <div className="bg-cedar rounded-full h-2" style={{ width: '85%' }} />
+      {profileScore < 100 && missingFields.length > 0 && (
+        <FadeIn delay={0.2}>
+          <div className="bg-white rounded-lg border border-border p-6">
+            <div className="flex items-start gap-4">
+              <div className="w-10 h-10 rounded bg-gold/10 flex items-center justify-center flex-shrink-0">
+                <User className="h-5 w-5 text-gold" />
               </div>
-              <Link
-                href="/dashboard/profile"
-                className="text-sm text-cedar font-medium hover:underline"
-              >
-                Complete Profile
-              </Link>
+              <div className="flex-1">
+                <h3 className="text-sm font-medium text-charcoal mb-1">Complete Your Profile</h3>
+                <p className="text-sm text-muted-foreground mb-4">
+                  Your profile is {profileScore}% complete. Add your {missingFields.join(', ')} to improve it.
+                </p>
+                <div className="w-full bg-sand rounded-full h-2 mb-3">
+                  <div className="bg-cedar rounded-full h-2" style={{ width: `${profileScore}%` }} />
+                </div>
+                <Link
+                  href="/dashboard/profile"
+                  className="text-sm text-cedar font-medium hover:underline"
+                >
+                  Complete Profile
+                </Link>
+              </div>
             </div>
           </div>
-        </div>
-      </FadeIn>
+        </FadeIn>
+      )}
     </div>
   );
 }

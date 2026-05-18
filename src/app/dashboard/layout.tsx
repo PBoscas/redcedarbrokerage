@@ -9,7 +9,7 @@ import {
   LayoutDashboard, User, Home, MessageSquare, Image,
   BarChart3, LogOut, ExternalLink, Menu, X,
 } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 const dashboardNav = [
   { label: 'Overview', href: '/dashboard', icon: LayoutDashboard },
@@ -28,6 +28,13 @@ export default function DashboardLayout({
   const pathname = usePathname();
   const router = useRouter();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [userName, setUserName] = useState('');
+
+  useEffect(() => {
+    authClient.getSession().then((res) => {
+      if (res.data?.user?.name) setUserName(res.data.user.name);
+    });
+  }, []);
 
   const handleSignOut = async () => {
     await authClient.signOut();
@@ -124,7 +131,7 @@ export default function DashboardLayout({
             <div className="w-8 h-8 rounded-full bg-cedar/10 flex items-center justify-center">
               <User className="h-4 w-4 text-cedar" />
             </div>
-            <span className="text-sm text-charcoal hidden sm:block">Agent Name</span>
+            <span className="text-sm text-charcoal hidden sm:block">{userName || 'Loading...'}</span>
           </div>
         </header>
 
