@@ -3,12 +3,12 @@ import { auth } from '@/lib/auth/server';
 
 export async function GET(request: Request) {
   try {
-    // Test the auth handler directly with a fake sign-in request
+    // Test with real credentials
     const testUrl = new URL('/api/auth/sign-in/email', request.url);
     const testReq = new Request(testUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email: 'debug@test.com', password: 'test' }),
+      body: JSON.stringify({ email: 'peter@redcedarre.com', password: 'RedCedar2026!' }),
     });
 
     const response = await auth.handler(testReq);
