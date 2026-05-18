@@ -177,12 +177,14 @@ export async function fetchClosedListings(): Promise<RawListing[]> {
 }
 
 export async function fetchDeltaListings(since: string): Promise<RawListing[]> {
-  const filter = `ListOfficeMlsId eq '${OFFICE_MLS_ID}' and ModificationTimestamp gt ${since}`;
+  // Ensure timestamp is ISO 8601 for OData
+  const isoSince = new Date(since).toISOString();
+  const filter = `ListOfficeMlsId eq '${OFFICE_MLS_ID}' and ModificationTimestamp gt ${isoSince}`;
   return fetchAllPages(filter);
 }
 
 export async function fetchListingByKey(listingKey: string): Promise<RawListing | null> {
-  const filter = `ListingKey eq ${listingKey}`;
+  const filter = `ListingKey eq '${listingKey}'`;
   const url = `${API_BASE}/BrightProperties?$filter=${filter}&$select=${SELECT_FIELDS}`;
   const data = await mlsFetch(url);
   const items = (data.value as RawListing[]) || [];
