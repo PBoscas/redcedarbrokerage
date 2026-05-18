@@ -1,7 +1,7 @@
 import { FadeIn } from '@/components/ui/motion';
 import { sql } from '@/lib/db';
 import {
-  Users, Shield, ShieldCheck, Mail, Plus,
+  Users, Shield, ShieldCheck, Mail,
 } from 'lucide-react';
 
 interface UserRow {
@@ -69,10 +69,9 @@ export default async function UsersPage() {
               Manage admin, editor, and agent accounts.
             </p>
           </div>
-          <button className="inline-flex items-center gap-2 bg-cedar text-white px-4 py-2 rounded-lg text-sm hover:bg-cedar/90 transition-colors">
-            <Plus className="h-4 w-4" />
-            Add User
-          </button>
+          <span className="text-xs text-muted-foreground italic">
+            Users are created when agents sign up.
+          </span>
         </div>
       </FadeIn>
 

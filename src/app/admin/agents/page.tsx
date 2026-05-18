@@ -1,9 +1,9 @@
 import { FadeIn } from '@/components/ui/motion';
 import {
   UserCheck, Phone, Mail, MapPin,
-  Search, Plus, MoreHorizontal,
 } from 'lucide-react';
 import { getAllAgents } from '@/lib/queries/agents';
+import Link from 'next/link';
 
 export default async function AgentsPage() {
   const agents = await getAllAgents();
@@ -17,23 +17,6 @@ export default async function AgentsPage() {
             <p className="text-sm text-muted-foreground">
               Manage agent profiles, bios, and listing assignments.
             </p>
-          </div>
-          <button className="inline-flex items-center gap-2 bg-cedar text-white px-4 py-2 rounded-lg text-sm hover:bg-cedar/90 transition-colors">
-            <Plus className="h-4 w-4" />
-            Add Agent
-          </button>
-        </div>
-      </FadeIn>
-
-      <FadeIn delay={0.05}>
-        <div className="flex items-center gap-3 mb-4">
-          <div className="relative flex-1 max-w-sm">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <input
-              type="text"
-              placeholder="Search agents..."
-              className="w-full pl-9 pr-3 py-2 text-sm border border-border rounded-lg bg-sand-light/50 focus:outline-none focus:ring-1 focus:ring-cedar/30"
-            />
           </div>
           <span className="text-sm text-muted-foreground">{agents.length} agents</span>
         </div>
@@ -55,9 +38,6 @@ export default async function AgentsPage() {
                     <p className="text-xs text-muted-foreground">{agent.title}</p>
                   </div>
                 </div>
-                <button className="p-1 rounded hover:bg-sand-light transition-colors">
-                  <MoreHorizontal className="h-4 w-4 text-muted-foreground" />
-                </button>
               </div>
 
               <div className="space-y-1.5 mb-4">
@@ -84,11 +64,19 @@ export default async function AgentsPage() {
                 }`}>
                   {agent.status}
                 </span>
-                {agent.license_number && (
-                  <span className="text-xs text-muted-foreground">
-                    License #{agent.license_number}
-                  </span>
-                )}
+                <div className="flex items-center gap-3">
+                  {agent.license_number && (
+                    <span className="text-xs text-muted-foreground">
+                      License #{agent.license_number}
+                    </span>
+                  )}
+                  <Link
+                    href={`/agents/${agent.slug}`}
+                    className="text-xs text-cedar hover:text-cedar/80 font-medium transition-colors"
+                  >
+                    View Profile
+                  </Link>
+                </div>
               </div>
             </div>
           </FadeIn>

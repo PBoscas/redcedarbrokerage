@@ -38,6 +38,12 @@ export interface AgentAwardRow {
   issuer: string | null;
 }
 
+export interface AgentSocialLinkRow {
+  id: string;
+  platform: string;
+  url: string;
+}
+
 export async function getActiveAgents(): Promise<AgentRow[]> {
   const rows = await sql`
     SELECT id, slug, first_name, last_name, title, bio_short, bio_full,
@@ -109,6 +115,15 @@ export async function getAgentAwards(agentId: string): Promise<AgentAwardRow[]> 
     ORDER BY sort_order
   `;
   return rows as AgentAwardRow[];
+}
+
+export async function getAgentSocialLinks(agentId: string): Promise<AgentSocialLinkRow[]> {
+  const rows = await sql`
+    SELECT id, platform, url FROM agent_social_links
+    WHERE agent_id = ${agentId}
+    ORDER BY sort_order
+  `;
+  return rows as AgentSocialLinkRow[];
 }
 
 export async function getAgentByUserId(userId: string): Promise<AgentRow | null> {

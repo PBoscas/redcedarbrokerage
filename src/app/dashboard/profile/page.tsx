@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation';
 import { getServerSession } from '@/lib/auth/session';
-import { getAgentByUserId, getAgentSpecialties, getAgentServiceAreas, getAgentAwards } from '@/lib/queries/agents';
+import { getAgentByUserId, getAgentSpecialties, getAgentServiceAreas, getAgentAwards, getAgentSocialLinks } from '@/lib/queries/agents';
 import ProfileForm from './profile-form';
 
 export default async function ProfilePage() {
@@ -19,10 +19,11 @@ export default async function ProfilePage() {
     );
   }
 
-  const [specialties, serviceAreas, awards] = await Promise.all([
+  const [specialties, serviceAreas, awards, socialLinks] = await Promise.all([
     getAgentSpecialties(agent.id),
     getAgentServiceAreas(agent.id),
     getAgentAwards(agent.id),
+    getAgentSocialLinks(agent.id),
   ]);
 
   return (
@@ -31,6 +32,7 @@ export default async function ProfilePage() {
       specialties={specialties}
       serviceAreas={serviceAreas}
       awards={awards}
+      socialLinks={socialLinks}
     />
   );
 }
