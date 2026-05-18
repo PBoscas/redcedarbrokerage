@@ -26,6 +26,14 @@ export const metadata: Metadata = {
   },
   description:
     'Red Cedar Real Estate is the highest rated real estate brokerage in central Maryland, delivering a first-class client experience from start to finish.',
+  icons: {
+    icon: [
+      { url: '/favicon.ico', sizes: '32x32' },
+      { url: '/icon-192.png', sizes: '192x192', type: 'image/png' },
+      { url: '/icon-512.png', sizes: '512x512', type: 'image/png' },
+    ],
+    apple: '/apple-icon.png',
+  },
   openGraph: {
     type: 'website',
     locale: 'en_US',
