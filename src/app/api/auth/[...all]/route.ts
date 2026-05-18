@@ -3,16 +3,20 @@ import { NextRequest, NextResponse } from 'next/server';
 
 async function handleAuth(request: NextRequest) {
   try {
-    const response = await auth.handler(request as unknown as Request);
+    // Convert NextRequest to a standard Request for Better Auth compatibility
+    const standardRequest = new Request(request.url, {
+      method: request.method,
+      headers: request.headers,
+      body: request.method !== 'GET' && request.method !== 'HEAD' ? request.body : undefined,
+      // @ts-expect-error duplex is needed for streaming body
+      duplex: 'half',
+    });
 
-    // If Better Auth returns a 500, re-create the response with the error visible
+    const response = await auth.handler(standardRequest);
+
     if (response.status >= 500) {
       const body = await response.clone().text();
       console.error('[AUTH ERROR]', response.status, request.nextUrl.pathname, body || '(empty body)');
-      return NextResponse.json(
-        { error: body || 'Internal auth error', status: response.status },
-        { status: response.status }
-      );
     }
 
     return response;
