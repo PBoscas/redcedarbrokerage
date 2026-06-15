@@ -138,6 +138,18 @@ export async function getAgentByUserId(userId: string): Promise<AgentRow | null>
   return (rows[0] as AgentRow) ?? null;
 }
 
+export async function getAgentByFullName(fullName: string): Promise<AgentRow | null> {
+  const rows = await sql`
+    SELECT id, slug, first_name, last_name, title, bio_short, bio_full,
+           headshot_url, email, phone, role, license_number, license_state, status, sort_order
+    FROM agents
+    WHERE status = 'active'
+      AND (first_name || ' ' || last_name) ILIKE ${fullName}
+    LIMIT 1
+  `;
+  return (rows[0] as AgentRow) ?? null;
+}
+
 export async function getAllAgents(): Promise<AgentRow[]> {
   const rows = await sql`
     SELECT id, slug, first_name, last_name, title, bio_short, bio_full,

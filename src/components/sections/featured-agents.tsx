@@ -87,10 +87,10 @@ export function FeaturedAgentsSection({ agents }: FeaturedAgentsSectionProps) {
         <FadeIn delay={0.3} className="text-center mt-14">
           <Link
             href="/agents"
-            className="inline-flex items-center gap-2 text-sm text-cedar font-medium tracking-wide hover:gap-3 transition-all"
+            className="inline-flex items-center gap-3 px-10 py-4 bg-cedar text-white text-lg font-bold tracking-wide rounded hover:bg-cedar-dark transition-colors"
           >
             View All Agents
-            <ArrowRight className="h-4 w-4" />
+            <ArrowRight className="h-5 w-5" />
           </Link>
         </FadeIn>
       </div>

@@ -76,8 +76,8 @@ export default function JoinRedCedarPage() {
         </div>
       </section>
 
-      {/* Office tour placeholder */}
-      <section className="section-padding bg-sand-light">
+      {/* Office tour placeholder — hidden until Matterport embed is ready */}
+      {/* <section className="section-padding bg-sand-light">
         <div className="container-wide">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
             <FadeIn>
@@ -105,7 +105,7 @@ export default function JoinRedCedarPage() {
             </ScaleReveal>
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* Agent testimonial */}
       <section className="section-padding bg-white">
@@ -113,12 +113,12 @@ export default function JoinRedCedarPage() {
           <FadeIn>
             <Quote className="h-10 w-10 text-cedar/20 mx-auto mb-6" />
             <blockquote className="text-editorial text-xl md:text-2xl text-charcoal leading-relaxed mb-6">
-              &ldquo;Joining Red Cedar was the best career decision I&apos;ve made. The
-              technology, marketing support, and collaborative culture have helped me
-              take my business to a level I didn&apos;t think was possible.&rdquo;
+              &ldquo;Red Cedar Real Estate has made me a customer for life. Their
+              service and work for you is another whole magnitude better than anyone
+              else we&apos;ve ever done real estate with.&rdquo;
             </blockquote>
-            <p className="text-sm font-medium text-charcoal">Sarah Mitchell</p>
-            <p className="text-sm text-muted-foreground">Principal Agent, Red Cedar</p>
+            <p className="text-sm font-medium text-charcoal">Johann Jung</p>
+            <p className="text-sm text-muted-foreground">Red Cedar Client</p>
           </FadeIn>
         </div>
       </section>

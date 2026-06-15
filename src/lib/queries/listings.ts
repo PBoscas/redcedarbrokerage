@@ -70,7 +70,7 @@ export async function getSoldListings(limit = 50): Promise<ListingRow[]> {
   const rows = await sql`
     SELECT * FROM mls_listings
     WHERE status = 'Closed'
-    ORDER BY close_date DESC
+    ORDER BY list_price DESC NULLS LAST
     LIMIT ${limit}
   `;
   return rows as ListingRow[];

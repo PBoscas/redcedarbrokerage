@@ -24,7 +24,7 @@ export const footerNav = {
     { label: 'Listings', href: '/listings' },
     { label: 'Buyers', href: '/buyers' },
     { label: 'Sellers', href: '/sellers' },
-    { label: 'Neighborhoods', href: '/neighborhoods' },
+    // { label: 'Neighborhoods', href: '/neighborhoods' },  // Hidden until more counties are added
   ],
   legal: [
     { label: 'Privacy Policy', href: '/privacy' },
@@ -35,4 +35,6 @@ export const footerNav = {
 
 export const socialLinks = [
   { platform: 'Facebook', href: 'https://facebook.com/RedCedarRealEstate', icon: 'facebook' },
+  { platform: 'Instagram', href: 'https://instagram.com/RedCedarRealEstate', icon: 'instagram' },
+  { platform: 'X', href: 'https://x.com/RedCedarRE', icon: 'twitter' },
 ];

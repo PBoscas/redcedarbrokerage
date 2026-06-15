@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { getListingByKey, getListingPhotos } from '@/lib/queries/listings';
+import { getAgentByFullName } from '@/lib/queries/agents';
 import { formatPrice, formatBaths, formatSqft, statusColor, statusLabel } from '@/lib/mls/format';
 import { ArrowLeft, Bed, Bath, Ruler, Calendar } from 'lucide-react';
 import { ListingDetailImages } from './images';
@@ -33,6 +34,14 @@ export default async function ListingDetailPage({ params }: ListingDetailProps) 
 
   const heroPhoto = photos[0]?.media_url ?? null;
   const galleryPhotos = photos.slice(1, 25);
+
+  // Try to match the listing agent to a Red Cedar agent
+  const listingAgent = listing.list_agent_name
+    ? await getAgentByFullName(listing.list_agent_name)
+    : null;
+  const contactHref = listingAgent
+    ? `/contact?agent=${listingAgent.slug}`
+    : `/contact?listing=${listing.listing_id}`;
 
   return (
     <>
@@ -264,10 +273,13 @@ export default async function ListingDetailPage({ params }: ListingDetailProps) 
 
                 {/* CTA */}
                 <Link
-                  href={`/contact?listing=${listing.listing_id}`}
+                  href={contactHref}
                   className="block w-full text-center px-6 py-3 bg-cedar text-white font-medium text-sm rounded hover:bg-cedar-dark transition-colors"
                 >
-                  Inquire About This Property
+                  {listingAgent
+                    ? `Contact ${listingAgent.first_name} ${listingAgent.last_name}`
+                    : 'Inquire About This Property'
+                  }
                 </Link>
               </div>
             </div>

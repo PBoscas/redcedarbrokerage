@@ -101,7 +101,7 @@ export function FeaturedHomesSection({ listings }: FeaturedHomesSectionProps) {
                   {listing.address}
                 </h3>
                 <p className="text-sm text-muted-foreground mb-3">
-                  {[listing.city, listing.state, listing.zip].filter(Boolean).join(', ')}
+                  {[listing.city, listing.state].filter(Boolean).join(', ')}{listing.zip ? ` ${listing.zip}` : ''}
                 </p>
 
                 {/* Stats */}

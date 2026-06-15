@@ -2,13 +2,14 @@ import Link from 'next/link';
 import { Logo } from '@/components/brand/logo';
 import { footerNav, socialLinks } from '@/lib/constants/navigation';
 import { BRAND } from '@/lib/constants/brand';
-import { Instagram, Linkedin, Facebook, Youtube } from 'lucide-react';
+import { Instagram, Linkedin, Facebook, Youtube, Twitter } from 'lucide-react';
 
 const socialIcons: Record<string, React.ComponentType<{ className?: string }>> = {
   instagram: Instagram,
   linkedin: Linkedin,
   facebook: Facebook,
   youtube: Youtube,
+  twitter: Twitter,
 };
 
 export function Footer() {
