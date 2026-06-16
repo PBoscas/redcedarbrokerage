@@ -55,14 +55,13 @@ export async function getActiveAgents(): Promise<AgentRow[]> {
   return rows as AgentRow[];
 }
 
-export async function getRandomAgents(limit = 3): Promise<AgentRow[]> {
+export async function getFeaturedAgents(): Promise<AgentRow[]> {
   const rows = await sql`
     SELECT id, slug, first_name, last_name, title, bio_short,
            headshot_url, email, phone, role, status, sort_order
     FROM agents
-    WHERE status = 'active' AND role IN ('agent', 'broker')
+    WHERE status = 'active' AND slug IN ('brian-pakulla', 'joe-bird', 'peter-boscas')
     ORDER BY random()
-    LIMIT ${limit}
   `;
   return rows as AgentRow[];
 }

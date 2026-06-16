@@ -9,14 +9,14 @@ import { TestimonialsSection } from '@/components/sections/testimonials';
 import { AwardsBandSection } from '@/components/sections/awards-band';
 import { RecruitingTeaserSection } from '@/components/sections/recruiting-teaser';
 import { ContactCTASection } from '@/components/sections/contact-cta';
-import { getRandomAgents, getAgentSpecialties } from '@/lib/queries/agents';
+import { getFeaturedAgents, getAgentSpecialties } from '@/lib/queries/agents';
 import { getFeaturedListings } from '@/lib/queries/listings';
 
 export const dynamic = 'force-dynamic';
 
 export default async function HomePage() {
   const [rawAgents, featuredListings] = await Promise.all([
-    getRandomAgents(3),
+    getFeaturedAgents(),
     getFeaturedListings(3),
   ]);
 
