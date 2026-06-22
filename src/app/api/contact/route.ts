@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { sql } from '@/lib/db';
+import { sendInquiryNotification, FALLBACK_TO } from '@/lib/email';
 
 // Maps form type values to DB enum values
 const TYPE_MAP: Record<string, string> = {
@@ -41,14 +42,19 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // If agent_slug is provided, look up the agent_id
+    // If agent_slug is provided, look up the agent
     let agentId: string | null = null;
+    let agentEmail: string | null = null;
+    let agentName: string | null = null;
     if (agent_slug) {
       const agentRows = await sql`
-        SELECT id FROM agents WHERE slug = ${agent_slug} LIMIT 1
+        SELECT id, email, first_name || ' ' || last_name as full_name
+        FROM agents WHERE slug = ${agent_slug} LIMIT 1
       `;
       if (agentRows.length > 0) {
         agentId = agentRows[0].id;
+        agentEmail = agentRows[0].email;
+        agentName = agentRows[0].full_name;
       }
     }
 
@@ -66,6 +72,17 @@ export async function POST(request: NextRequest) {
       )
       RETURNING id, created_at
     `;
+
+    // Send email notification (don't block the response on failure)
+    const recipientEmail = agentEmail || FALLBACK_TO;
+    const recipientName = agentName || 'Team';
+    sendInquiryNotification({
+      toEmail: recipientEmail,
+      toName: recipientName,
+      inquiry: { type: dbType, name, email, phone, message, metadata },
+    }).catch((err) => {
+      console.error('Email notification failed (non-blocking):', err);
+    });
 
     return NextResponse.json(
       { success: true, id: result[0].id, created_at: result[0].created_at },
