@@ -73,16 +73,19 @@ export async function POST(request: NextRequest) {
       RETURNING id, created_at
     `;
 
-    // Send email notification (don't block the response on failure)
+    // Send email notification — must await in serverless environments
     const recipientEmail = agentEmail || FALLBACK_TO;
     const recipientName = agentName || 'Team';
-    sendInquiryNotification({
-      toEmail: recipientEmail,
-      toName: recipientName,
-      inquiry: { type: dbType, name, email, phone, message, metadata },
-    }).catch((err) => {
-      console.error('Email notification failed (non-blocking):', err);
-    });
+    try {
+      await sendInquiryNotification({
+        toEmail: recipientEmail,
+        toName: recipientName,
+        inquiry: { type: dbType, name, email, phone, message, metadata },
+      });
+    } catch (err) {
+      console.error('Email notification failed:', err);
+      // Still return success since the submission was saved to the database
+    }
 
     return NextResponse.json(
       { success: true, id: result[0].id, created_at: result[0].created_at },
