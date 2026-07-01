@@ -1,9 +1,18 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FadeIn } from '@/components/ui/motion';
 import { ChevronLeft, ChevronRight, Quote } from 'lucide-react';
+
+function pickRandom<T>(arr: T[], n: number): T[] {
+  const shuffled = [...arr];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled.slice(0, n);
+}
 
 const TESTIMONIALS = [
   // --- Peter reviews ---
@@ -641,12 +650,13 @@ const TESTIMONIALS = [
 ];
 
 export function TestimonialsSection() {
+  const testimonials = useMemo(() => pickRandom(TESTIMONIALS, 10), []);
   const [current, setCurrent] = useState(0);
 
   const prev = () =>
-    setCurrent((c) => (c === 0 ? TESTIMONIALS.length - 1 : c - 1));
+    setCurrent((c) => (c === 0 ? testimonials.length - 1 : c - 1));
   const next = () =>
-    setCurrent((c) => (c === TESTIMONIALS.length - 1 ? 0 : c + 1));
+    setCurrent((c) => (c === testimonials.length - 1 ? 0 : c + 1));
 
   return (
     <section className="section-padding bg-warm-white">
@@ -672,14 +682,14 @@ export function TestimonialsSection() {
             >
               <Quote className="h-10 w-10 text-cedar/20 mx-auto mb-8" />
               <blockquote className="text-editorial text-xl md:text-2xl lg:text-3xl text-charcoal leading-relaxed mb-8 max-w-3xl mx-auto">
-                &ldquo;{TESTIMONIALS[current].quote}&rdquo;
+                &ldquo;{testimonials[current].quote}&rdquo;
               </blockquote>
               <div>
                 <p className="text-sm font-semibold text-charcoal">
-                  {TESTIMONIALS[current].client}
+                  {testimonials[current].client}
                 </p>
                 <p className="text-sm text-muted-foreground">
-                  {TESTIMONIALS[current].context}
+                  {testimonials[current].context}
                 </p>
               </div>
             </motion.div>
@@ -695,7 +705,7 @@ export function TestimonialsSection() {
               <ChevronLeft className="h-5 w-5" />
             </button>
             <span className="text-sm text-muted-foreground tabular-nums">
-              {current + 1} / {TESTIMONIALS.length}
+              {current + 1} / {testimonials.length}
             </span>
             <button
               onClick={next}
