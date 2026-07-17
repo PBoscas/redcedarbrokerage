@@ -12,6 +12,9 @@ import {
 
 type InquiryType = 'buying' | 'selling' | 'relocating' | 'agent' | 'general' | null;
 
+// Sentinel for an explicit "No preference" choice — distinct from '' (nothing chosen yet).
+const NO_PREFERENCE = 'no-preference';
+
 interface AgentOption {
   slug: string;
   name: string;
@@ -53,8 +56,15 @@ export function ContactForm({ agents, preselectedAgentSlug }: ContactFormProps) 
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setSubmitting(true);
     setError(null);
+
+    // Require an explicit choice of who to route the inquiry to.
+    if (!selectedAgentSlug) {
+      setError('Please select who you’d like to send this to (choose an agent or "No preference").');
+      return;
+    }
+
+    setSubmitting(true);
 
     const form = e.currentTarget;
     const formData = new FormData(form);
@@ -69,7 +79,7 @@ export function ContactForm({ agents, preselectedAgentSlug }: ContactFormProps) 
           email: formData.get('email'),
           phone: formData.get('phone') || null,
           message: formData.get('message') || null,
-          agent_slug: selectedAgentSlug || null,
+          agent_slug: selectedAgentSlug && selectedAgentSlug !== NO_PREFERENCE ? selectedAgentSlug : null,
           metadata: {
             areas: formData.get('areas') || undefined,
             address: formData.get('address') || undefined,
@@ -238,22 +248,18 @@ export function ContactForm({ agents, preselectedAgentSlug }: ContactFormProps) 
                         />
                       </div>
 
-                      {/* Agent selector — always shown */}
+                      {/* Agent selector — always shown, choice required */}
                       <AgentSelector
                         agents={agents}
                         value={selectedAgentSlug}
                         onChange={setSelectedAgentSlug}
-                        required={selectedType === 'agent'}
                         label={
                           selectedType === 'agent'
                             ? 'Which agent would you like to speak with? *'
-                            : "Is there a specific agent you'd like to work with?"
+                            : "Is there a specific agent you'd like to work with? *"
                         }
-                        placeholder={
-                          selectedType === 'agent'
-                            ? 'Select an agent...'
-                            : 'No preference — connect me with anyone'
-                        }
+                        placeholder="Please Select"
+                        noPreferenceLabel="No preference — connect me with anyone"
                       />
 
                       {(selectedType === 'buying' || selectedType === 'relocating') && (
@@ -405,12 +411,12 @@ interface AgentSelectorProps {
   agents: AgentOption[];
   value: string;
   onChange: (slug: string) => void;
-  required?: boolean;
   label: string;
-  placeholder: string;
+  placeholder: string;        // shown when nothing is chosen yet ("Please Select")
+  noPreferenceLabel: string;  // label for the explicit "No preference" choice
 }
 
-function AgentSelector({ agents, value, onChange, required, label, placeholder }: AgentSelectorProps) {
+function AgentSelector({ agents, value, onChange, label, placeholder, noPreferenceLabel }: AgentSelectorProps) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   const selected = agents.find((a) => a.slug === value) ?? null;
@@ -429,17 +435,9 @@ function AgentSelector({ agents, value, onChange, required, label, placeholder }
     <div ref={ref} className="relative">
       <label className="block text-sm font-medium text-charcoal mb-1.5">{label}</label>
 
-      {/* Hidden native input for form validation */}
-      {required && (
-        <input
-          tabIndex={-1}
-          className="absolute opacity-0 h-0 w-0"
-          value={value}
-          required
-          onChange={() => {}}
-          aria-hidden
-        />
-      )}
+      {/* Validation is enforced in handleSubmit (an explicit choice is always required),
+          not via a hidden native input — a zero-size required field blocks submission
+          silently because the browser can't focus it to show its message. */}
 
       {/* Trigger */}
       <button
@@ -453,6 +451,13 @@ function AgentSelector({ agents, value, onChange, required, label, placeholder }
           <>
             <AgentAvatar agent={selected} size={28} />
             <span className="flex-1 text-charcoal">{selected.name} <span className="text-muted-foreground">— {selected.title}</span></span>
+          </>
+        ) : value === NO_PREFERENCE ? (
+          <>
+            <div className="w-7 h-7 rounded-full bg-sand-light flex items-center justify-center flex-shrink-0">
+              <Users className="h-3.5 w-3.5 text-muted-foreground" />
+            </div>
+            <span className="flex-1 text-charcoal">{noPreferenceLabel}</span>
           </>
         ) : (
           <>
@@ -478,15 +483,15 @@ function AgentSelector({ agents, value, onChange, required, label, placeholder }
             {/* No preference option */}
             <button
               type="button"
-              onClick={() => { onChange(''); setOpen(false); }}
+              onClick={() => { onChange(NO_PREFERENCE); setOpen(false); }}
               className={`w-full flex items-center gap-3 px-4 py-3 text-sm text-left hover:bg-sand-light transition-colors ${
-                !value ? 'bg-cedar/5 text-cedar' : 'text-muted-foreground'
+                value === NO_PREFERENCE ? 'bg-cedar/5 text-cedar' : 'text-muted-foreground'
               }`}
             >
               <div className="w-7 h-7 rounded-full bg-sand-light flex items-center justify-center flex-shrink-0">
                 <Users className="h-3.5 w-3.5 text-muted-foreground" />
               </div>
-              <span>{placeholder}</span>
+              <span>{noPreferenceLabel}</span>
             </button>
 
             {agents.map((a) => (
