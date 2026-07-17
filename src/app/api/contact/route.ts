@@ -80,7 +80,17 @@ export async function POST(request: NextRequest) {
       await sendInquiryNotification({
         toEmail: recipientEmail,
         toName: recipientName,
-        inquiry: { type: dbType, name, email, phone, message, metadata },
+        inquiry: {
+          type: dbType,
+          name,
+          email,
+          phone,
+          message,
+          metadata,
+          requestedAgentName: agentName,
+          // No agent_slug means the visitor explicitly chose "No preference".
+          noPreference: !agent_slug,
+        },
       });
     } catch (err) {
       console.error('Email notification failed:', err);
