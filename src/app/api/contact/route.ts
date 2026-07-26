@@ -8,6 +8,7 @@ const TYPE_MAP: Record<string, string> = {
   selling: 'selling',
   relocating: 'relocating',
   agent: 'agent_inquiry',
+  joining: 'recruiting',
   general: 'general',
 };
 

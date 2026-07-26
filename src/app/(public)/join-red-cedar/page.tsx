@@ -38,7 +38,7 @@ export default function JoinRedCedarPage() {
                 ready for a brokerage that matches their ambition.
               </p>
               <Link
-                href="/contact"
+                href="/contact?type=joining"
                 className="inline-flex items-center gap-2 px-8 py-4 bg-cedar text-white font-medium text-sm rounded hover:bg-cedar-dark transition-colors"
               >
                 Start the Conversation
@@ -135,7 +135,7 @@ export default function JoinRedCedarPage() {
               success, we&apos;d love to have a confidential conversation.
             </p>
             <Link
-              href="/contact"
+              href="/contact?type=joining"
               className="inline-flex items-center gap-2 px-8 py-4 bg-white text-cedar font-medium text-sm rounded hover:bg-white/90 transition-colors"
             >
               Let&apos;s Talk

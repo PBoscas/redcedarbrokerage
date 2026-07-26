@@ -1,5 +1,5 @@
 import { getPublicAgents } from '@/lib/queries/agents';
-import { ContactForm } from './contact-form';
+import { ContactForm, INQUIRY_TYPES, type InquiryType } from './contact-form';
 
 export const metadata = {
   title: 'Contact',
@@ -7,16 +7,23 @@ export const metadata = {
 };
 
 interface ContactPageProps {
-  searchParams: Promise<{ agent?: string }>;
+  searchParams: Promise<{ agent?: string; type?: string }>;
 }
 
 export default async function ContactPage({ searchParams }: ContactPageProps) {
-  const { agent: agentSlug } = await searchParams;
+  const { agent: agentSlug, type } = await searchParams;
   const agents = await getPublicAgents();
 
   const preselectedAgent = agentSlug
     ? agents.find((a) => a.slug === agentSlug) ?? null
     : null;
+
+  // ?type= lets other pages deep-link straight into a specific inquiry
+  // (e.g. /join-red-cedar sends people to /contact?type=joining).
+  const preselectedType: InquiryType =
+    type && (INQUIRY_TYPES as readonly string[]).includes(type)
+      ? (type as InquiryType)
+      : null;
 
   const agentOptions = agents.map((a) => ({
     slug: a.slug,
@@ -31,6 +38,7 @@ export default async function ContactPage({ searchParams }: ContactPageProps) {
     <ContactForm
       agents={agentOptions}
       preselectedAgentSlug={preselectedAgent?.slug ?? null}
+      preselectedType={preselectedType}
     />
   );
 }

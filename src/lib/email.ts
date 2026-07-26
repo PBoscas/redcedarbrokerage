@@ -28,6 +28,7 @@ const TYPE_LABELS: Record<string, string> = {
   selling: 'Selling Inquiry',
   relocating: 'Relocation Inquiry',
   agent_inquiry: 'Agent Inquiry',
+  recruiting: 'Join Red Cedar Inquiry',
   general: 'General Inquiry',
 };
 

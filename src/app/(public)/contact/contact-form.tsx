@@ -6,11 +6,16 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { FadeIn } from '@/components/ui/motion';
 import { BRAND } from '@/lib/constants/brand';
 import {
-  Home, TrendingUp, Plane, Users, HelpCircle,
+  Home, TrendingUp, Plane, Users, HelpCircle, Briefcase,
   ArrowRight, ArrowLeft, MapPin, Phone, Mail, Check, UserCircle, ChevronDown,
 } from 'lucide-react';
 
-type InquiryType = 'buying' | 'selling' | 'relocating' | 'agent' | 'general' | null;
+// Also the accepted values of the ?type= query param — see contact/page.tsx.
+export const INQUIRY_TYPES = [
+  'buying', 'selling', 'relocating', 'agent', 'joining', 'general',
+] as const;
+
+export type InquiryType = (typeof INQUIRY_TYPES)[number] | null;
 
 // Sentinel for an explicit "No preference" choice — distinct from '' (nothing chosen yet).
 const NO_PREFERENCE = 'no-preference';
@@ -27,6 +32,7 @@ interface AgentOption {
 interface ContactFormProps {
   agents: AgentOption[];
   preselectedAgentSlug: string | null;
+  preselectedType: InquiryType;
 }
 
 const inquiryOptions = [
@@ -34,16 +40,17 @@ const inquiryOptions = [
   { type: 'selling' as const, icon: TrendingUp, label: "I'm Selling", description: 'Considering listing my home.' },
   { type: 'relocating' as const, icon: Plane, label: "I'm Relocating", description: 'Moving to central Maryland.' },
   { type: 'agent' as const, icon: Users, label: 'Speak With an Agent', description: 'Connect with a specific agent.' },
+  { type: 'joining' as const, icon: Briefcase, label: 'Joining Red Cedar', description: "I'd like to explore the options for joining Red Cedar." },
   { type: 'general' as const, icon: HelpCircle, label: 'Something Else', description: 'General questions or other inquiries.' },
 ];
 
-export function ContactForm({ agents, preselectedAgentSlug }: ContactFormProps) {
+export function ContactForm({ agents, preselectedAgentSlug, preselectedType }: ContactFormProps) {
   const preselectedAgent = preselectedAgentSlug
     ? agents.find((a) => a.slug === preselectedAgentSlug) ?? null
     : null;
 
   const [selectedType, setSelectedType] = useState<InquiryType>(
-    preselectedAgent ? 'agent' : null
+    preselectedAgent ? 'agent' : preselectedType
   );
   const [selectedAgentSlug, setSelectedAgentSlug] = useState<string>(
     preselectedAgentSlug ?? ''
@@ -133,13 +140,17 @@ export function ContactForm({ agents, preselectedAgentSlug }: ContactFormProps) 
             <h1 className="text-display text-4xl md:text-5xl text-charcoal mb-6">
               {preselectedAgent
                 ? <>Contact <span className="text-cedar">{preselectedAgent.name}</span></>
-                : <>Let&apos;s Start a <span className="text-cedar">Conversation</span></>
+                : selectedType === 'joining'
+                  ? <>Let&apos;s Talk About <span className="text-cedar">Joining Red Cedar</span></>
+                  : <>Let&apos;s Start a <span className="text-cedar">Conversation</span></>
               }
             </h1>
             <p className="text-muted-foreground max-w-xl text-body-lg">
               {preselectedAgent
                 ? `Send a message directly to ${preselectedAgent.name} and they'll get back to you promptly.`
-                : "Tell us how we can help, and we'll connect you with the right person on our team."
+                : selectedType === 'joining'
+                  ? 'Tell us a bit about yourself and we’ll set up a confidential conversation about what joining Red Cedar could look like.'
+                  : "Tell us how we can help, and we'll connect you with the right person on our team."
               }
             </p>
           </FadeIn>
@@ -256,10 +267,16 @@ export function ContactForm({ agents, preselectedAgentSlug }: ContactFormProps) 
                         label={
                           selectedType === 'agent'
                             ? 'Which agent would you like to speak with? *'
-                            : "Is there a specific agent you'd like to work with? *"
+                            : selectedType === 'joining'
+                              ? "Is there someone at Red Cedar you'd like to speak with? *"
+                              : "Is there a specific agent you'd like to work with? *"
                         }
                         placeholder="Please Select"
-                        noPreferenceLabel="No preference — connect me with anyone"
+                        noPreferenceLabel={
+                          selectedType === 'joining'
+                            ? 'No preference — connect me with leadership'
+                            : 'No preference — connect me with anyone'
+                        }
                       />
 
                       {(selectedType === 'buying' || selectedType === 'relocating') && (
@@ -301,7 +318,11 @@ export function ContactForm({ agents, preselectedAgentSlug }: ContactFormProps) 
                           name="message"
                           rows={4}
                           className="w-full px-4 py-3 bg-white border border-border rounded text-sm focus:outline-none focus:border-cedar focus:ring-1 focus:ring-cedar/20 transition-colors resize-none"
-                          placeholder="Tell us more about what you're looking for..."
+                          placeholder={
+                            selectedType === 'joining'
+                              ? "Tell us a little about your business and what you're looking for in a brokerage..."
+                              : "Tell us more about what you're looking for..."
+                          }
                         />
                       </div>
 
