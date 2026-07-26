@@ -21,6 +21,15 @@ export const BRAND = {
   founded: '2012',
 } as const;
 
+// The principals. They're surfaced first on the agents page and in the contact
+// form's agent picker — a visitor is most often here because of one of them.
+// Order within the group is randomized so nobody is permanently listed first.
+export const PRINCIPAL_AGENT_SLUGS = [
+  'peter-boscas',
+  'joe-bird',
+  'brian-pakulla',
+] as const;
+
 export const STATS = [
   { value: '$500M+', label: 'Total Sales Volume' },
   { value: '1,000+', label: 'Homes Represented' },

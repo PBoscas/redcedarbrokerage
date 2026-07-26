@@ -1,5 +1,10 @@
 import { sql } from '@/lib/db';
+import { PRINCIPAL_AGENT_SLUGS } from '@/lib/constants/brand';
 import type { StaffRole } from '@/types';
+
+// Tagged-template params can't be spread into ANY(), so materialize the
+// readonly tuple as a plain array once.
+const PRINCIPALS: string[] = [...PRINCIPAL_AGENT_SLUGS];
 
 export interface AgentRow {
   id: string;
@@ -60,7 +65,7 @@ export async function getFeaturedAgents(): Promise<AgentRow[]> {
     SELECT id, slug, first_name, last_name, title, bio_short,
            headshot_url, email, phone, role, status, sort_order
     FROM agents
-    WHERE status = 'active' AND slug IN ('brian-pakulla', 'joe-bird', 'peter-boscas')
+    WHERE status = 'active' AND slug = ANY(${PRINCIPALS})
     ORDER BY random()
   `;
   return rows as AgentRow[];
@@ -72,7 +77,13 @@ export async function getPublicAgents(): Promise<AgentRow[]> {
            headshot_url, email, phone, role, license_number, license_state, status, sort_order
     FROM agents
     WHERE status = 'active' AND role IN ('agent', 'broker')
-    ORDER BY last_name, first_name
+    ORDER BY
+      -- Principals first (shuffled among themselves), then everyone else
+      -- alphabetically by last name. Non-principals all share the same
+      -- constant second key, so they fall through to last_name/first_name.
+      CASE WHEN slug = ANY(${PRINCIPALS}) THEN 0 ELSE 1 END,
+      CASE WHEN slug = ANY(${PRINCIPALS}) THEN random() ELSE 1 END,
+      last_name, first_name
   `;
   return rows as AgentRow[];
 }
