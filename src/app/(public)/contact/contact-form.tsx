@@ -10,12 +10,7 @@ import {
   ArrowRight, ArrowLeft, MapPin, Phone, Mail, Check, UserCircle, ChevronDown,
 } from 'lucide-react';
 
-// Also the accepted values of the ?type= query param — see contact/page.tsx.
-export const INQUIRY_TYPES = [
-  'buying', 'selling', 'relocating', 'agent', 'joining', 'general',
-] as const;
-
-export type InquiryType = (typeof INQUIRY_TYPES)[number] | null;
+import type { InquiryType } from './inquiry-types';
 
 // Sentinel for an explicit "No preference" choice — distinct from '' (nothing chosen yet).
 const NO_PREFERENCE = 'no-preference';

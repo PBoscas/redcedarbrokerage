@@ -1,5 +1,6 @@
 import { getPublicAgents } from '@/lib/queries/agents';
-import { ContactForm, INQUIRY_TYPES, type InquiryType } from './contact-form';
+import { ContactForm } from './contact-form';
+import { INQUIRY_TYPES, type InquiryType } from './inquiry-types';
 
 export const metadata = {
   title: 'Contact',
