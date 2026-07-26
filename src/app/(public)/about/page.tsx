@@ -2,9 +2,15 @@
 
 import Link from 'next/link';
 import { FadeIn, StaggerContainer, staggerChild, ScaleReveal } from '@/components/ui/motion';
+import { Photo } from '@/components/ui/photo';
 import { motion } from 'framer-motion';
 import { ArrowRight, Users, Lightbulb, Heart, Target } from 'lucide-react';
 import { BRAND, STATS } from '@/lib/constants/brand';
+
+// Illustrative (AI-generated) office scene, not a photograph of the actual
+// team or office — so the alt text describes the scene rather than naming
+// anyone. Swap in a real team photo here when one is available.
+const TEAM_PHOTO = '/images/about/team.jpg';
 
 const values = [
   { icon: Heart, title: 'Client First', description: 'Every decision we make centers on delivering the best possible outcome for the people we serve.' },
@@ -32,10 +38,14 @@ export default function AboutPage() {
               </p>
             </FadeIn>
             <ScaleReveal>
-              <div className="aspect-[4/3] bg-sand rounded-lg overflow-hidden">
-                <div className="w-full h-full bg-gradient-to-br from-cedar/10 to-sand flex items-center justify-center text-cedar/20 text-sm">
-                  Team / Office Photo
-                </div>
+              <div className="relative aspect-[4/3] bg-sand rounded-lg overflow-hidden">
+                <Photo
+                  src={TEAM_PHOTO}
+                  alt="Colleagues reviewing market data together around a conference table"
+                  placeholder="Team / office photo coming soon"
+                  className="object-cover"
+                  priority
+                />
               </div>
             </ScaleReveal>
           </div>

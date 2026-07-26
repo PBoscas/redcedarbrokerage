@@ -1,23 +1,33 @@
 'use client';
 
 import Link from 'next/link';
-import Image from 'next/image';
 import { FadeIn, ScaleReveal } from '@/components/ui/motion';
+import { Photo } from '@/components/ui/photo';
 import { ArrowRight, ChevronLeft } from 'lucide-react';
 
+// These used to point at the old WordPress CDN (b3448231.smushcdn.com). Those
+// files have been deleted — every URL now 403s and the originals aren't in the
+// Wayback Machine either — so the photos are self-hosted from /public instead.
+// Drop the files at these paths and they appear; until then <Photo> renders
+// the branded placeholder rather than a broken image.
+// The original five-photo gallery from the old site (its 1.jpg–5.jpg), in the
+// same order — overgrown, cleared, re-roofed, excavated, finished.
 const storyImages = [
-  'https://b3448231.smushcdn.com/3448231/wp-content/uploads/2015/11/1.jpg',
-  'https://b3448231.smushcdn.com/3448231/wp-content/uploads/2015/11/2.jpg',
-  'https://b3448231.smushcdn.com/3448231/wp-content/uploads/2015/11/3.jpg',
-  'https://b3448231.smushcdn.com/3448231/wp-content/uploads/2015/11/4.jpg',
-  'https://b3448231.smushcdn.com/3448231/wp-content/uploads/2015/11/5.jpg',
+  { src: '/images/story/story-1.jpg', alt: 'The house before renovation — so overgrown with trees and bushes it could barely be seen from the street' },
+  { src: '/images/story/story-2.jpg', alt: 'The overgrowth cleared away, exposing the front porch and the original red cedar shingles' },
+  { src: '/images/story/story-3.jpg', alt: 'The 1928 bungalow part-way through the rebuild, with a new roof over the porch' },
+  { src: '/images/story/story-4.jpg', alt: 'Excavation across the front yard during the renovation' },
+  { src: '/images/story/story-5.jpg', alt: 'The finished home, with new siding, a paver walkway and a landscaped front yard' },
 ];
 
+// The same four photos the old site used, in the same order — before, framing,
+// then two views of the finished kitchen. Sourced from the originals in
+// Dropbox Archive rather than the dead CDN copies.
 const kitchenImages = [
-  { src: 'https://b3448231.smushcdn.com/3448231/wp-content/uploads/2015/11/Weaver-Before-small.jpg', alt: 'Kitchen before renovation' },
-  { src: 'https://b3448231.smushcdn.com/3448231/wp-content/uploads/2015/11/Framing-Stage-2-Small.jpg', alt: 'Kitchen framing stage' },
-  { src: 'https://b3448231.smushcdn.com/3448231/wp-content/uploads/2015/11/Kit-2-Small.jpg', alt: 'Kitchen renovation progress' },
-  { src: 'https://b3448231.smushcdn.com/3448231/wp-content/uploads/2015/11/Kit-1-Small.jpg', alt: 'Kitchen after renovation' },
+  { src: '/images/story/kitchen-before.jpg', alt: 'The original 1928 kitchen — barely ten feet wide, with an awkward L-shaped layout' },
+  { src: '/images/story/kitchen-framing.jpg', alt: 'The addition framed out, opening up the back of the house for a larger kitchen' },
+  { src: '/images/story/kitchen-after-1.jpg', alt: 'The finished kitchen, with a range and vent hood set into a tiled backsplash' },
+  { src: '/images/story/kitchen-after-2.jpg', alt: 'The finished kitchen looking through to the new family room' },
 ];
 
 export default function OurStoryPage() {
@@ -43,11 +53,12 @@ export default function OurStoryPage() {
             </FadeIn>
             <ScaleReveal>
               <div className="aspect-[4/3] bg-sand rounded-lg overflow-hidden relative">
-                <Image
-                  src={storyImages[0]}
-                  alt="The Red Cedar story — the house that started it all"
-                  fill
+                <Photo
+                  src={storyImages[0].src}
+                  alt={storyImages[0].alt}
+                  placeholder="The house that started it all — photo coming soon"
                   className="object-cover"
+                  priority
                 />
               </div>
             </ScaleReveal>
@@ -85,12 +96,11 @@ export default function OurStoryPage() {
         <div className="container-wide">
           <FadeIn>
             <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
-              {storyImages.map((src, i) => (
-                <div key={i} className="relative aspect-square rounded overflow-hidden bg-sand">
-                  <Image
-                    src={src}
-                    alt={`Red Cedar story photo ${i + 1}`}
-                    fill
+              {storyImages.map((img) => (
+                <div key={img.src} className="relative aspect-square rounded overflow-hidden bg-sand">
+                  <Photo
+                    src={img.src}
+                    alt={img.alt}
                     className="object-cover hover:scale-105 transition-transform duration-500"
                   />
                 </div>
@@ -155,14 +165,9 @@ export default function OurStoryPage() {
             </FadeIn>
             <div className="grid grid-cols-2 gap-3">
               {kitchenImages.map((img, i) => (
-                <ScaleReveal key={i} delay={i * 0.1}>
+                <ScaleReveal key={img.src} delay={i * 0.1}>
                   <div className="relative aspect-square rounded overflow-hidden bg-sand">
-                    <Image
-                      src={img.src}
-                      alt={img.alt}
-                      fill
-                      className="object-cover"
-                    />
+                    <Photo src={img.src} alt={img.alt} placeholder={img.alt} className="object-cover" />
                   </div>
                 </ScaleReveal>
               ))}
