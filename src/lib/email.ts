@@ -8,8 +8,8 @@ const FALLBACK_TO = 'peter@redcedarre.com';
 interface InquiryEmailParams {
   toEmail: string;
   toName: string;
-  // Addresses copied on the notification (recruiting inquiries copy the
-  // principals). Empty or omitted means no CC header is sent.
+  // Addresses copied on the notification (a recruiting inquiry with no agent
+  // chosen copies the principals). Empty or omitted means no CC header.
   ccEmails?: string[];
   inquiry: {
     type: string;

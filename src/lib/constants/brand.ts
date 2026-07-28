@@ -30,9 +30,9 @@ export const PRINCIPAL_AGENT_SLUGS = [
   'brian-pakulla',
 ] as const;
 
-// Someone asking about joining the brokerage is a leadership conversation, so
-// the other two principals are copied on the notification no matter who the
-// inquiry is addressed to.
+// When someone asks about joining the brokerage without naming who they want
+// to talk to, these two are copied on the notification alongside Peter. If
+// they did name someone, that inquiry goes to that person only.
 export const RECRUITING_CC_AGENT_SLUGS = [
   'brian-pakulla',
   'joe-bird',

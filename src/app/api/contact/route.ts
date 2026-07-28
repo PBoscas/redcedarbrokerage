@@ -79,10 +79,11 @@ export async function POST(request: NextRequest) {
     const recipientEmail = agentEmail || FALLBACK_TO;
     const recipientName = agentName || 'Team';
 
-    // Someone asking about joining the brokerage is leadership's business, so
-    // copy the other principals — skipping whoever is already the recipient.
+    // A recruiting inquiry with nobody in particular asked for goes to Peter,
+    // and the other principals are copied. If the visitor did name someone,
+    // that conversation is theirs alone — no CC.
     let ccEmails: string[] = [];
-    if (dbType === 'recruiting') {
+    if (dbType === 'recruiting' && !agentEmail) {
       const ccRows = await sql`
         SELECT email FROM agents
         WHERE slug = ANY(${[...RECRUITING_CC_AGENT_SLUGS]}) AND email IS NOT NULL
