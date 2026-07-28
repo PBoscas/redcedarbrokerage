@@ -8,6 +8,9 @@ const FALLBACK_TO = 'peter@redcedarre.com';
 interface InquiryEmailParams {
   toEmail: string;
   toName: string;
+  // Addresses copied on the notification (recruiting inquiries copy the
+  // principals). Empty or omitted means no CC header is sent.
+  ccEmails?: string[];
   inquiry: {
     type: string;
     name: string;
@@ -81,6 +84,7 @@ export function buildInquiryEmailText(
 export async function sendInquiryNotification({
   toEmail,
   toName,
+  ccEmails,
   inquiry,
 }: InquiryEmailParams) {
   const typeLabel = TYPE_LABELS[inquiry.type] || 'New Inquiry';
@@ -88,6 +92,7 @@ export async function sendInquiryNotification({
   const { error } = await resend.emails.send({
     from: FROM_ADDRESS,
     to: toEmail,
+    ...(ccEmails?.length ? { cc: ccEmails } : {}),
     replyTo: inquiry.email,
     subject: `${typeLabel} from ${inquiry.name}`,
     text: buildInquiryEmailText(inquiry, toName),

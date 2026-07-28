@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { sql } from '@/lib/db';
 import { sendInquiryNotification, FALLBACK_TO } from '@/lib/email';
+import { RECRUITING_CC_AGENT_SLUGS } from '@/lib/constants/brand';
 
 // Maps form type values to DB enum values
 const TYPE_MAP: Record<string, string> = {
@@ -77,10 +78,25 @@ export async function POST(request: NextRequest) {
     // Send email notification — must await in serverless environments
     const recipientEmail = agentEmail || FALLBACK_TO;
     const recipientName = agentName || 'Team';
+
+    // Someone asking about joining the brokerage is leadership's business, so
+    // copy the other principals — skipping whoever is already the recipient.
+    let ccEmails: string[] = [];
+    if (dbType === 'recruiting') {
+      const ccRows = await sql`
+        SELECT email FROM agents
+        WHERE slug = ANY(${[...RECRUITING_CC_AGENT_SLUGS]}) AND email IS NOT NULL
+      `;
+      ccEmails = ccRows
+        .map((row) => row.email as string)
+        .filter((cc) => cc.toLowerCase() !== recipientEmail.toLowerCase());
+    }
+
     try {
       await sendInquiryNotification({
         toEmail: recipientEmail,
         toName: recipientName,
+        ccEmails,
         inquiry: {
           type: dbType,
           name,

@@ -30,6 +30,14 @@ export const PRINCIPAL_AGENT_SLUGS = [
   'brian-pakulla',
 ] as const;
 
+// Someone asking about joining the brokerage is a leadership conversation, so
+// the other two principals are copied on the notification no matter who the
+// inquiry is addressed to.
+export const RECRUITING_CC_AGENT_SLUGS = [
+  'brian-pakulla',
+  'joe-bird',
+] as const;
+
 export const STATS = [
   { value: '$500M+', label: 'Total Sales Volume' },
   { value: '1,000+', label: 'Homes Represented' },
