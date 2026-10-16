@@ -62,7 +62,7 @@ const TESTIMONIALS = [
     context: 'Google Review — Peter',
   },
   {
-    quote: 'Working with Peter, Michaela, and the rest of the team at Red Cedar Real Estate was a great experience. Based on our limited dealings with real estate agents in the past, we were expecting a certain level of used-car salesmanship in the process, but Peter was the opposite.',
+    quote: 'Working with Peter and the rest of the team at Red Cedar Real Estate was a great experience. Based on our limited dealings with real estate agents in the past, we were expecting a certain level of used-car salesmanship in the process, but Peter was the opposite.',
     client: 'Reina Chano Murray',
     context: 'Google Review — Peter',
   },
@@ -84,11 +84,6 @@ const TESTIMONIALS = [
   {
     quote: 'My fiancé and I just completed the process of buying our first home in an extremely challenging market and our experience in working with Peter and Red Cedar Real Estate could not be more positive.',
     client: 'Michelle Marks',
-    context: 'Google Review — Peter',
-  },
-  {
-    quote: 'We had moved to Maryland a year ago, and Julia from Red Cedar Real Estate was recommended to us from a loan originator we met at an open house. We could not have asked for a more perfect match! Julia knows the areas really well.',
-    client: 'Sara Davidson',
     context: 'Google Review — Peter',
   },
   {
@@ -122,11 +117,6 @@ const TESTIMONIALS = [
     context: 'Google Review — Peter',
   },
   {
-    quote: 'When I decided to downsize, I interviewed and received presentations from several Realtors. I chose Julia Neal from Red Cedar Real Estate because she presented me with a clearly superior market and comparative home analysis.',
-    client: 'NathanTa',
-    context: 'Google Review — Peter',
-  },
-  {
     quote: 'My experience with Red Cedar Real Estate has been nothing but extremely positive. Peter Boscas and his team are extremely professional, accommodating, and knowledgeable about the home buying process from start to finish.',
     client: 'Kevin',
     context: 'Google Review — Peter',
@@ -134,11 +124,6 @@ const TESTIMONIALS = [
   {
     quote: 'Peter is the absolute best out there! A total work horse for his clients, while being so professional and patient. He has tons of reliable connections from being in the game for so long too which is invaluable.',
     client: 'Jill Genovese',
-    context: 'Google Review — Peter',
-  },
-  {
-    quote: 'We had the great pleasure of working with Julia in our first home buying experience and it couldn\'t have gone better! After preparing to buy our first home for several years, saving up, and reading about all the things that could go wrong, Julia made it seamless.',
-    client: 'Jenae Cleghorn',
     context: 'Google Review — Peter',
   },
   {
@@ -182,28 +167,13 @@ const TESTIMONIALS = [
     context: 'Google Review — Peter',
   },
   {
-    quote: 'Julia is everything that you would want in a realtor and more! From her calm but very knowledgeable personality, to feeling like you were her ONLY client, Julia was simply perfect to work with.',
-    client: 'Emily Taylor',
-    context: 'Google Review — Peter',
-  },
-  {
     quote: 'As a first time home buyer, I wanted to work with an agent who was going to be patient, attentive, knowledgable, and reliable. I was extremely nervous about making the plunge, but I am so glad I did it with Peter.',
     client: 'Alexander Harris',
     context: 'Google Review — Peter',
   },
   {
-    quote: 'We had the pleasure of working with Julia to find our dream home over the last few months, and we would ABSOLUTELY recommend her to anyone looking to buy or sell a home! She is knowledgeable, honest, and trustworthy.',
-    client: 'Nina T.',
-    context: 'Google Review — Peter',
-  },
-  {
     quote: 'We did a lot of research before we ended up choosing Peter Boscas as our Realtor. We talked with friends and did our due diligence. The reality is he exceeded our already high expectations.',
     client: 'Colin Cunningham',
-    context: 'Google Review — Peter',
-  },
-  {
-    quote: 'We recently bought our first house, and Julia Nyman was there to help us every step of the way. I really enjoyed how she gave us the tools to sift through the vast ocean of property listings from the comfort of our living room.',
-    client: 'Ian Andrews',
     context: 'Google Review — Peter',
   },
   {
@@ -237,33 +207,8 @@ const TESTIMONIALS = [
     context: 'Google Review — Peter',
   },
   {
-    quote: 'Julia is amazing! She is very thorough and extremely knowledgable about selling/buying homes. Julia helped us sell our previous home in less than 2 weeks and now we are working with her and under contract on our new home!',
-    client: 'Hannah Ainsworth',
-    context: 'Google Review — Peter',
-  },
-  {
-    quote: 'I called Julia based on a recommendation from a coworker, and I\'ve already recommended her (and Red Cedar) to another coworker. Buying my first house seemed daunting, but Julia helped put my worries to ease by explaining everything.',
-    client: 'Justin Reigle',
-    context: 'Google Review — Peter',
-  },
-  {
     quote: 'Red Cedar Real Estate has made me a customer for life. Their service and work for you is another whole magnitude better than anyone else we\'ve ever done real estate with.',
     client: 'Johann Jung',
-    context: 'Google Review — Peter',
-  },
-  {
-    quote: 'My husband and I wanted to buy our first home so we called Amanda Autry. This was the best choice we have made! Amanda helped us find houses with both of our needs in mind within our budget. She never tried to just "sell a house".',
-    client: 'Tiffany Nicole',
-    context: 'Google Review — Peter',
-  },
-  {
-    quote: 'I closed on my home a few weeks ago and worked with Emily Jang at Red Cedar throughout the process. She was incredible and personable and knew my style and asked all the right questions.',
-    client: 'Tamar June',
-    context: 'Google Review — Peter',
-  },
-  {
-    quote: 'After having had NO success with a previous realtor in a booming market, we were feeling lost and defeated. Once we found Julia, at Red Cedar Real Estate, we found hope again and ultimately our dream home.',
-    client: 'Ariel Grinspoon',
     context: 'Google Review — Peter',
   },
   {
@@ -272,23 +217,8 @@ const TESTIMONIALS = [
     context: 'Google Review — Peter',
   },
   {
-    quote: 'Red Cedar will turn your daunting deal into an effortless endeavor! I have to thank Peter and Meghan for their efforts. They made things as easy as "Point n Click".',
+    quote: 'Red Cedar will turn your daunting deal into an effortless endeavor! They made things as easy as "Point n Click".',
     client: 'Kevin Usta',
-    context: 'Google Review — Peter',
-  },
-  {
-    quote: 'Amazing experience! Molly was a pro, and guided us through the entire process. All the small touches like the beautiful sign, beautiful photography, custom website, etc. made Red Cedar feel like a luxury service.',
-    client: 'Paul Fornia',
-    context: 'Google Review — Peter',
-  },
-  {
-    quote: 'Kay and I met Julia at an open house. We were so impressed by her professionalism and honesty, we made the easy decision to work with Julia. As first-time homebuyers, she guided us through everything.',
-    client: 'Cyndi Crowl',
-    context: 'Google Review — Peter',
-  },
-  {
-    quote: 'This was truly a great company to work with when purchasing my first home! Julia and Molly worked with me through all of it and were absolutely wonderful! I felt like I was in really good hands.',
-    client: 'L G',
     context: 'Google Review — Peter',
   },
   {
@@ -314,16 +244,6 @@ const TESTIMONIALS = [
   {
     quote: 'Red Cedar Real Estate is the place to go to, hands down! Peter is extremely professional, always responsive and very easy to work with.',
     client: 'Parrish Staples',
-    context: 'Google Review — Peter',
-  },
-  {
-    quote: "Couldn't have asked for a better realtor than Emily. You know you're in good hands when she calls you to check in on her day off when she's not supposed to be worrying about you. Highly recommend!",
-    client: 'Marco Romero',
-    context: 'Google Review — Peter',
-  },
-  {
-    quote: 'Amanda did a great job selling our first home which was a full-time job in its self as well as helping us through our new home build!',
-    client: 'Ashley Barger',
     context: 'Google Review — Peter',
   },
   {
@@ -646,6 +566,450 @@ const TESTIMONIALS = [
     quote: 'Joe made himself available for every property we wanted to see, and we never felt like we were second place to anyone else. Everything was so well organized from start to finish and the closing process was very smooth.',
     client: 'Laurie',
     context: 'Zillow Review — Joe',
+  },
+  // --- Brian reviews ---
+  {
+    quote: 'My coworker recommended Brian to me. And after working with various realtors previously, I would have to say Brian and his team is by far the best realtor team I\'ve seen.',
+    client: 'B C',
+    context: 'Google Review — Brian',
+  },
+  {
+    quote: 'Brian was great to work with. We used him as both our buying and selling agent. He was able to sell our home quickly at the price we wanted. The website and brochures were very professionally done.',
+    client: 'Young Sik Yu',
+    context: 'Google Review — Brian',
+  },
+  {
+    quote: 'This is the first time my husband and I were selling a home--needless to say, we were quite inexperienced and nervous. All the reviews about him are spot on. From start to finish, Brian was the consummate professional.',
+    client: 'Sharada Modur',
+    context: 'Google Review — Brian',
+  },
+  {
+    quote: 'I worked with a few relators, Brian is by far the best I\'ve dealt with. Working w/ him was a pleasure, he was always there to answer any questions or address any concerns I had.',
+    client: 'Matt Allen',
+    context: 'Google Review — Brian',
+  },
+  {
+    quote: 'We found Brian based on reputation, and he and his team lived up to the high expectations I had! He helped us sell our house in a very short time for more than we originally listed for, which was more than I ever expected to get for the house.',
+    client: 'Carrie Dunn',
+    context: 'Google Review — Brian',
+  },
+  {
+    quote: 'Brian is absolutely outstanding! His expertise guided us smoothly through the process of selling our first home. We didn\'t have much time (we listed in April and needed to move out of state in June)!',
+    client: 'Threya Ober',
+    context: 'Google Review — Brian',
+  },
+  {
+    quote: 'I met Brian Pakulla when he moved into a community I manage about 15 years ago. His energy, commitment and community spirit has impressed me from day one. He joined the Board of Directors and has served the entire 15 years.',
+    client: 'Cathy Powder Wagner',
+    context: 'Facebook Review — Brian',
+  },
+  {
+    quote: 'Brian is a terrific realtor and cares greatly for his community. I\'d highly recommend him for all of your realty needs!',
+    client: 'Linda Lucy',
+    context: 'Facebook Review — Brian',
+  },
+  {
+    quote: 'Brian made our selling process clear and easy. He explained things throughout the process and was very available whenever we had questions or clarification. He understood the nuances of our market like no other realtor that we met with.',
+    client: 'Brett Meliti',
+    context: 'Google Review — Brian',
+  },
+  {
+    quote: 'We interviewed a few agents before Brian. We ultimately decided to work with Brian because of his stats. Stats do not lie! He priced the house right and we got an offer pretty much within the first few hours of listing.',
+    client: 'Geanie',
+    context: 'Google Review — Brian',
+  },
+  {
+    quote: 'Brian is extremely knowledgeable about Woodland Village and provided great advice and guidance while being able to hear and address my concerns and perspective throughout the selling process.',
+    client: 'Mia Molfino Posner',
+    context: 'Google Review — Brian',
+  },
+  {
+    quote: 'Brian sold our home in Ellicott City, MD. He and his team were extremely helpful throughout the process. They explained all of the paperwork well ahead of time and gave insightful recommendations and advice.',
+    client: 'Paula Kara',
+    context: 'Google Review — Brian',
+  },
+  {
+    quote: 'Brian Pakulla and his team were everything we expected and more! Brian is honest, hard working and efficient. His experience in the field is invaluable and real estate is most definitely his niche.',
+    client: 'Valerie Brady',
+    context: 'Facebook Review — Brian & Ryan',
+  },
+  {
+    quote: 'Working with Brian Pakulla was a great experience. He worked with us to understand the market, on recommending changes and updates for our house, and on finding the right time to list it.',
+    client: 'Andrea Black',
+    context: 'Google Review — Brian',
+  },
+  {
+    quote: 'We are very happy with Brian Pakulla during the process of selling our house. He is very professional, knowledgeable, and easy to work with. He knows the market so well that with his strategy and appropriate pricing, we were able to sell our house in 18 days!!',
+    client: 'Soudabeh Khojasteh Banankhah',
+    context: 'Facebook Review — Brian',
+  },
+  {
+    quote: 'Brian and his team provided excellent service in helping the sale of our home. He helped us navigate through the lengthy process and was always available to answer any questions we had.',
+    client: 'Brenda Tsai',
+    context: 'Facebook Review — Brian',
+  },
+  {
+    quote: 'I cannot begin to tell you how happy I was that I listed my house with Brian. Everything was first class. The listing was well written with beautiful photography and brochures.',
+    client: 'Kevin Callahan',
+    context: 'Google Review — Brian',
+  },
+  {
+    quote: 'Brian Pakulla and his team were excellent to work with. We cannot say enough GREAT things about our experience. Brian helped us navigate through the sale of our home and purchase of our new dream home right as the COVID-19 pandemic hit.',
+    client: 'Niki and Kenny Watson',
+    context: 'Google Review — Brian',
+  },
+  {
+    quote: 'I can\'t say enough about how amazing Brian and his team were when my family decided to buy and sell. He is extremely knowledgeable about the housing market and offers amazing advice without being pushy.',
+    client: 'Gabe Unterman',
+    context: 'Facebook Review — Brian',
+  },
+  {
+    quote: 'Brian and his team were a blessing in our life. He\'s very pleasant and has great communication skills, and he patiently addressed all our concerns. The whole process was totally stress free.',
+    client: 'Sara Jinu',
+    context: 'Google Review — Brian',
+  },
+  {
+    quote: 'I would highly recommend Brian. Thanks to him and his team we sold our house at a very good price without any difficulties. He was very systematic, clear and thorough with all parties and this ensured a smooth sales process.',
+    client: 'Gautam Chatur',
+    context: 'Google Review — Brian',
+  },
+  {
+    quote: 'Brian is great, highly recommended. We needed to sell our childhood home, built in 1979 with some unusual age-related issues. Brian gave solid advice, was super responsive, walked us through the process and in the end, we got multiple offers and sold the house \'as is" in less than a week for 5% above asking.',
+    client: 'David Hantman',
+    context: 'Google Review — Brian',
+  },
+  {
+    quote: 'We are so appreciative of the professionalism and responsiveness of Brian and his team. We needed to operate under a very tight deadline, and Brian exceeded our expectations with a sale within days and a price point that we did not think we would attain.',
+    client: 'Kathy Gustafson',
+    context: 'Google Review — Brian',
+  },
+  {
+    quote: 'My wife and I intended to interview 3 realtors before choosing someone to sell our home. We sent 3 inquiries and received a response from Brian within minutes. He offered to meet with us the next day.',
+    client: 'Brian Kiesel',
+    context: 'Google Review — Brian',
+  },
+  {
+    quote: 'We spoke to several realtors before we selected Brian. Brian came with data, facts, and advice. He was honest and open and available pre-sale during sale and after sale and did not mind answering our numerous questions no matter how complicated or silly they were.',
+    client: 'Michael Deamer',
+    context: 'Google Review — Brian',
+  },
+  {
+    quote: 'From the first meeting that I met with Brian he told me exactly what I could expect and things worked out exactly as planned. They kept me informed with every step in the process and were always quick to answer any questions I had.',
+    client: 'Kevin Benner',
+    context: 'Google Review — Brian',
+  },
+  {
+    quote: 'Brian was helpful and responsive in the entire sale process. He made candid recommendations regarding readiness of the house for sale and movers and storage. I moved out before he listed the house and he handled the entire process.',
+    client: 'Tina',
+    context: 'Google Review — Brian',
+  },
+  {
+    quote: 'This was the easiest property transfer ever for us, out of about 8 buy/sell events. We had a condo in Ellicott City to sell, we saw Brian had sold many condos in that area, so we called him.',
+    client: 'BMSinMD',
+    context: 'Google Review — Brian',
+  },
+  {
+    quote: 'Brian just sold my second house in 4 years. He\'s always responsive, professional, friendly and of course effective. He gives excellent advice and I\'d recommend him to anyone!',
+    client: 'Jessica Mook Nachtman',
+    context: 'Google Review — Brian',
+  },
+  {
+    quote: 'We recently enlisted Brian Pakulla to assist us in selling our home in Columbia. Brian is refreshingly open, honest and responsive. He never missed a beat when we were in the throes of overwhelming interest within a tight timeframe.',
+    client: 'Jen Lenerd',
+    context: 'Google Review — Brian',
+  },
+  {
+    quote: 'Brian and his team were extremely professional and responsive to our questions and needs. He successfully negotiated us an offer well above the asking price. He constantly kept us informed on the progress of the closing which brought peace of mind since we relocated out of the Ellicott City area just after the offer was accepted.',
+    client: 'Ken and Sue Harrison',
+    context: 'Google Review — Brian',
+  },
+  {
+    quote: 'Brian and the Pakulla Team made selling a breeze. They kept us on track from listing to settlement. We certainly chose the right realtor.',
+    client: 'Barbara donlan',
+    context: 'Google Review — Brian',
+  },
+  {
+    quote: 'We were very pleased with Brian and his team. In our initial meeting with him, it was obvious that his grasp of the Howard County and regional market is excellent - he provided great data and used that to help us understand the process for selling our home and set realistic expectations.',
+    client: 'Jeff Lockard',
+    context: 'Google Review — Brian',
+  },
+  {
+    quote: 'This is our 2nd time using Brian and his team and they were just as great to work with this time around. Brian is always super responsive and is extremely knowledgable about the market and the strategies to yield the best return.',
+    client: 'Kimmeria Hall',
+    context: 'Google Review — Brian',
+  },
+  {
+    quote: 'Brian is extremely professional, knowledgeable, and made selling our home significantly less stressful.',
+    client: 'Jacob Reinhold',
+    context: 'Google Review — Brian',
+  },
+  {
+    quote: 'Brian sold my house for above asking price within a week of listing it. He told me what to expect and everything played out as he predicted.',
+    client: 'Rona Lawson',
+    context: 'Google Review — Brian',
+  },
+  {
+    quote: 'Brian and his team were great to work with. He was able to get our house sold on time under a tight schedule. His knowledge and experience are unmatched and helped us get through the process very smoothly.',
+    client: 'Tareq Nabeel',
+    context: 'Google Review — Brian',
+  },
+  {
+    quote: 'Great working with Brian and his team. They were quick to answer our questions and would always get back to us in a timely fashion. The team knew the market and the updates that the house needed to sell at the best price point for us, once we completed them it sold over a long weekend.',
+    client: 'Mike',
+    context: 'Google Review — Brian',
+  },
+  {
+    quote: 'Brian and his assistant, Kristin are an amazing team of incredible professionals. They went the extra mile in each and every turn of the process, making it much easier on me and my family.',
+    client: 'Danuta Hinc-Powell',
+    context: 'Google Review — Brian',
+  },
+  {
+    quote: 'Me and my husband signed on with Brian for the purchase of our new build, as well as the sale of our former home. Brian is the best in the business! If you want an experienced, professional and quality realtor, he\'s your man.',
+    client: 'Ardena Henderson',
+    context: 'Google Review — Brian',
+  },
+  {
+    quote: 'We love Brian, definitely the one to go to for great service and the best deal!',
+    client: 'Katie Perez',
+    context: 'Google Review — Brian',
+  },
+  {
+    quote: 'Worked with Brian and his stellar team to sell my condo rental property. Brian\'s professionalism made the entire process easy and smooth with no surprises.',
+    client: 'Charity Goodwin',
+    context: 'Google Review — Brian',
+  },
+  {
+    quote: 'We listened to his advice on making our house more marketable because he backed up his advice with good, sound reasoning. He knows what sells and what does not. Brian sold our home very quickly for much more than our listing price.',
+    client: 'Paul Looper',
+    context: 'Google Review — Brian',
+  },
+  {
+    quote: 'Brian sold my parents\' house in EC. Excellent. Knew the market, the neighborhood and comps. Advised on what were the key things needed to prep the house and what things were not good ROI.',
+    client: 'Mukund Krishnaswami',
+    context: 'Google Review — Brian',
+  },
+  {
+    quote: 'Brian and his team did an outstanding job in helping to sell our property in less than a week and with an above asking price contract. I would highly recommend them.',
+    client: 'zmann01',
+    context: 'Zillow Review — Brian',
+  },
+  {
+    quote: 'Brian is wonderful. He is very professional and also very caring to his clients needs. He made my mom very comfortable when she put her house on the market and helped her through the whole process.',
+    client: 'Erin Kell',
+    context: 'Google Review — Brian',
+  },
+  {
+    quote: 'Brian made the entire process a breeze. House was under contract in under a week!',
+    client: 'Derek Sanders',
+    context: 'Google Review — Brian',
+  },
+  {
+    quote: 'Brian was great to work with! He responded so timely each time, which was key since we had to move fast! His priority was finding what was right for us, and he took the time to really understand that.',
+    client: 'Urmi Cholera',
+    context: 'Google Review — Brian',
+  },
+  {
+    quote: 'Brian is a fantastic real estate agent. After we reached out to Brian based on his stellar reviews, he came to our home to meet, guided our family through the entire process, and listened to our needs.',
+    client: 'Courtney Elgayar',
+    context: 'Facebook Review — Brian & Ryan',
+  },
+  {
+    quote: 'Brian and his team did an amazing job with the sale of our home, so knowledgeable, prompt, great communication, easy to work with on all fronts. As well, he helped us navigate a most challenging new home buying experience.',
+    client: 'jwallop1',
+    context: 'Google Review — Brian',
+  },
+  {
+    quote: 'I recently listed and sold my home with Brian Pakulla. Brian was able to get multiple offers the first weekends. Everyone I dealt with on Brian Pakulla\'s team were excellent and kept me updated on the process, all the way til the house was sold.',
+    client: 'Mike Mianulli',
+    context: 'Google Review — Brian',
+  },
+  {
+    quote: 'Brian and his team are phenomenal. He helped us buy a new construction home, and sell our prior home. He was with us every step of the way, providing insight, advice, and guidance.',
+    client: 'Jeff Swenson',
+    context: 'Google Review — Brian',
+  },
+  {
+    quote: 'We have worked with Brian Pakulla and his team for over 20 years and have always had a great experience! They made the selling process for our recent home so easy and helped us understand what was happening every step of the way.',
+    client: 'hpittenger13',
+    context: 'Zillow Review — Brian',
+  },
+  {
+    quote: 'We cannot say enough good things about Brian and his team. He helped us purchase and build a home and sell our existing home. The amount of time he spent with us as we built our home, long after the purchase itself, was beyond every expectation we had, his attention to detail unparalleled, and his advice invaluable.',
+    client: 'kshardway',
+    context: 'Zillow Review — Brian',
+  },
+  {
+    quote: 'If you are searching for an agent who understands the MD housing market, has a proven track record in moving real estate, and is always available to help - look no further than Brian Pakulla and his team of experts.',
+    client: 'trimblealina',
+    context: 'Zillow Review — Brian',
+  },
+  {
+    quote: 'Brian was great to work with and made me feel very comfortable as this was my first time selling. His knowledge of the market and recommendations on house "fix-ups" proved invaluable and helped make the process seamless for me.',
+    client: 'Michael Wesdock',
+    context: 'Google Review — Brian',
+  },
+  {
+    quote: 'Brian Pakulla provided excellent support in helping me understand the process of selling my house, preparing the house for sale, and executing the sale. His experience and expertise were instrumental to effectively working any issues as they arose and completing the sale quickly and efficiently.',
+    client: 'Willard Bartlett',
+    context: 'Google Review — Brian',
+  },
+  {
+    quote: 'Brian was recommended highly by a former neighbor. He provided excellent service and advice even before I officially signed up for his services. He and his staff were always available for questions and assistance if needed.',
+    client: 'radopp',
+    context: 'Zillow Review — Brian',
+  },
+  {
+    quote: 'Brian Pakulla Real Estate is amazing. We bought our home through them and recently sold it through them. They are extremely knowledgeable on pricing and making things so easy!',
+    client: 'T. Ellis',
+    context: 'Google Review — Brian',
+  },
+  {
+    quote: 'Brian and team were fantastic. It was a pleasure working with them. Brian offered excellent advice from timing of selling, what to fix and what to leave as is, and how to price just right.',
+    client: 'elexsor',
+    context: 'Zillow Review — Brian',
+  },
+  {
+    quote: 'Brian did an amazing job of helping us sell our house. We were under a short timeline and he was able to come in and quickly help us get our house staged and pictures taken very professionally.',
+    client: 'npnirschl',
+    context: 'Zillow Review — Brian',
+  },
+  {
+    quote: 'Brian is an outstanding professional who exceeded all expectations. Reliable, trustworthy, and incredibly resourceful, his team made the home-selling process stress-free.',
+    client: 'mattpj40',
+    context: 'Zillow Review — Brian',
+  },
+  {
+    quote: 'Brian was readily available, answered questions in terms we could understand. Support staff rates A+++. House sold in 3 days for $50,000 over asking',
+    client: 'tandbkerr1',
+    context: 'Zillow Review — Brian',
+  },
+  {
+    quote: 'Brian and his team were outstanding. With his knowledge and skills, he takes the stress out of selling a home. We felt that we could completely trust him and allowed him to do his job.',
+    client: 'Deb McMenamin',
+    context: 'Zillow Review — Brian',
+  },
+  {
+    quote: 'Brian was very easy to work with throughout the process. He is supported by a well qualified team -- efficient, responsive and knowledgeable in their own areas. I very much appreciated being listened to and having my opinions considered.',
+    client: 'Mark Coburn',
+    context: 'Zillow Review — Brian',
+  },
+  {
+    quote: 'I was very impressed with Brian right from the time I interviewed him while I was looking for a realtor. He was extremely well organized and he covered a lot of detail which left little doubt about his market knowledge and the strategies he would employ.',
+    client: 'ravi kuppanna',
+    context: 'Zillow Review — Brian',
+  },
+  {
+    quote: 'Felt like I was working with the A-team. Brian Pakulla made selling my home smooth and efficient. Sharp, organized, and always ahead. Easily the best realtor I\'ve worked with.',
+    client: 'katherinejevans',
+    context: 'Zillow Review — Brian',
+  },
+  {
+    quote: 'We had a great experience working with Brian. He helped us sell our home in just 4 days and made the entire process much less stressful than we expected. He was always available, attentive, and quick to answer any questions we had.',
+    client: 'ashlee scalise',
+    context: 'Zillow Review — Brian',
+  },
+  {
+    quote: 'Brian, Kristin, and your team -- We would like to send a huge shout out to thank you all so much for making the sale of our house as painless as possible! We accomplished a tremendous amount in such a short period of time and for this we are extremely grateful.',
+    client: 'Sam Adamczyk',
+    context: 'Zillow Review — Brian',
+  },
+  {
+    quote: 'I couldn\'t have asked for a better agent. He provided excellent guidance on staging and made the paperwork process of breeze. He has a wealth of real estate knowledge and we have used him for this expertise after the sale through rent back and beyond.',
+    client: 'shop4stuff1',
+    context: 'Zillow Review — Brian',
+  },
+  {
+    quote: 'Brian beat out 3 competitors in our interview process. He demonstrated an absolute knowledge of the market. He\'s top shelf! We had 30+ viewings in 4 days that generated multiple offers.',
+    client: 'Pete Babendreier',
+    context: 'Google Review — Brian',
+  },
+  {
+    quote: 'Brian and his team performed exceptionally in the recent sale of my house. His experience and real estate savvy helped us feel very comfortable in the process to include giving us staging advice, setting us up for a successful and competitive sale, facilitating all contract paperwork, and assistance through rent back and beyond.',
+    client: 'Bill & Debbie McNeill',
+    context: 'Google Review — Brian',
+  },
+  {
+    quote: 'Brian and his team were knowledgeable and extremely easy to work with. They guided me every step of the way. They make the whole listing and selling process stress free.',
+    client: 'Elaine Walker',
+    context: 'Zillow Review — Brian',
+  },
+  {
+    quote: 'We recently used Brian in the listing of my mom\'s house. Not only is he personable, but he is also extremely knowledgeable about all facets of the market. He came to the initial meeting with three different options regarding renovations and subsequent listing prices, which I found very helpful.',
+    client: 'Jane Pappas',
+    context: 'Google Review — Brian',
+  },
+  {
+    quote: 'Working with Brian Pakulla and his team at Red Cedar Real Estate to sell my parents\' home was an excellent experience. From our initial listing through the final settlement, the process was handled with professional care and efficiency.',
+    client: 'Dan Hunter',
+    context: 'Google Review — Brian',
+  },
+  {
+    quote: 'Brian was a great choice and resource for selling my house. Brian was there for all of my questions and concerns. He offered advice and recommended companies to help make upgrades and repairs to get me a quick sale at my asking price.',
+    client: 'Mike Mezz',
+    context: 'Google Review — Brian',
+  },
+  // --- Ryan reviews ---
+  {
+    quote: 'We are extremely pleased with our experience working with Ryan Douglas, and the Pakulla team! From the start we felt very comfortable, which is not an easy task given the magnitude of this purchase we were gearing up to make for the first time.',
+    client: 'Victoria Smith',
+    context: 'Google Review — Ryan',
+  },
+  {
+    quote: 'Brian and his colleague, Ryan Douglas, were very attentive to my needs as a new home buyer and helped me in every step along the way. It is evident that Ryan definitely knows what he is doing and he is great at what he does.',
+    client: 'ashleyk9586',
+    context: 'Zillow Review — Ryan',
+  },
+  {
+    quote: 'Brian\'s team is legit. We worked with Ryan Douglas and he was amazing. He never stopped working to make sure we were perfectly happy with what we got. Unlike other real estate agents I\'ve worked with before, he was very honest and had very helpful opinions.',
+    client: 'Anthony Blochowiak',
+    context: 'Google Review — Ryan',
+  },
+  {
+    quote: 'We worked with Ryan Douglas to help us find a house. He was very professional, and helped answer all our questions, even after hours.',
+    client: 'David Baniszewski',
+    context: 'Google Review — Ryan',
+  },
+  {
+    quote: 'Ryan Douglas from Brian Pakulla\'s team was the hardest working and most responsive realtor I\'ve ever worked with. He was always available and willing to show us properties on short notice (sometimes hours).',
+    client: 'Claire Murphy',
+    context: 'Google Review — Ryan',
+  },
+  {
+    quote: 'Ryan is an outstanding real estate agent. We we were blown away by our experience with him. Ryan started off by listening to our family\'s needs. From there he kept us up to date on all of the real estate listings in the neighborhood we desired, several before they even came to market.',
+    client: 'Mommy & Daddy Johnson',
+    context: 'Google Review — Ryan',
+  },
+  {
+    quote: 'Ryan at Pakulla Real Estate is super helpful and knowledgeable about all aspects of buying a home. I would recommend him highly.',
+    client: 'George Elliott',
+    context: 'Google Review — Ryan',
+  },
+  {
+    quote: 'Ryan Douglas is a professional real estate agent and was a tremendous asset in helping us sell our home. From the beginning, he led the way with necessary contacts to make improvements that would substantially add to both the appearance and value, which resulted in multiple offers as soon as the home was listed.',
+    client: 'Jeff Link',
+    context: 'Google Review — Ryan',
+  },
+  // --- Jen reviews ---
+  {
+    quote: 'We worked with Jennifer Scicchitano with Pakulla Professionals and had a wonderful experience finding and buying a home, especially being new homebuyers. She listened to our wants and needs and sent us listings that fit the bill, and ultimately our new house.',
+    client: 'Jennifer P',
+    context: 'Google Review — Jen',
+  },
+  {
+    quote: 'I worked with Jennifer Scicchitano from Brian\'s team on both selling a house and then buying a new home in Howard County. Jen is exceptionally knowledgeable, savvy and experienced agent.',
+    client: 'pasikova',
+    context: 'Zillow Review — Jen',
+  },
+  {
+    quote: 'Very grateful to Jen Scicchitano with Pakulla Professionals! My husband and I just went through the process of purchasing our first home from across the country. Buying a home is a stressful process in itself, but doing so without being in the same city, let alone state, is quite the challenge!',
+    client: 'Kristin Chitman',
+    context: 'Google Review — Jen',
+  },
+  // --- Hollie reviews ---
+  {
+    quote: 'Hollie is very knowledgeable and was patient with first time home buyers. We never felt rushed and the outcome was that we bought an affordable home that we enjoy.',
+    client: 'jsmarshall5',
+    context: 'Zillow Review — Hollie',
   },
 ];
 
