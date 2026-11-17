@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { FadeIn, ScaleReveal } from '@/components/ui/motion';
 import { Smartphone, BarChart3, MessageCircle, Globe } from 'lucide-react';
 
@@ -70,15 +71,16 @@ export function TechnologySection() {
             </div>
           </div>
 
-          {/* Right — visual placeholder */}
+          {/* Right — visual */}
           <ScaleReveal>
             <div className="relative aspect-[4/5] bg-gradient-to-br from-cedar/30 to-charcoal rounded-lg overflow-hidden">
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="text-center text-white/20">
-                  <Smartphone className="h-16 w-16 mx-auto mb-4" />
-                  <p className="text-sm">Technology Visual</p>
-                </div>
-              </div>
+              <Image
+                src="/images/home/technology-training.webp"
+                alt="A presenter leading a real estate technology training session in front of a digital whiteboard"
+                fill
+                sizes="(min-width: 1024px) 50vw, 100vw"
+                className="object-cover object-top"
+              />
             </div>
           </ScaleReveal>
         </div>
