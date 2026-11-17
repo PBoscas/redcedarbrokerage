@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import Link from 'next/link';
 import { FadeIn } from '@/components/ui/motion';
 import { ArrowRight } from 'lucide-react';
@@ -33,9 +34,13 @@ export function RecruitingTeaserSection() {
 
           <FadeIn delay={0.2}>
             <div className="relative aspect-[4/3] bg-cedar-dark/50 rounded overflow-hidden">
-              <div className="absolute inset-0 flex items-center justify-center text-white/20">
-                <p className="text-sm">Office / Culture Visual</p>
-              </div>
+              <Image
+                src="/images/home/join-red-cedar.webp"
+                alt="Two men in blazers walking and talking along a brick sidewalk in a historic downtown"
+                fill
+                sizes="(min-width: 1024px) 50vw, 100vw"
+                className="object-cover"
+              />
             </div>
           </FadeIn>
         </div>
